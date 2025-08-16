@@ -12,12 +12,10 @@ const spotifyApi = axios.create({
 })
 
 spotifyApi.interceptors.request.use((config) => {
-  const envToken = import.meta.env.VITE_SPOTIFY_TOKEN
   const storeToken = useAuthStore.getState().getValidToken()
-  const token = envToken || storeToken
   
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (storeToken) {
+    config.headers.Authorization = `Bearer ${storeToken}`    
   }
   
   return config

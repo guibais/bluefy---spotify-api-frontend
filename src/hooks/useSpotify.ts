@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
 import { spotifyService } from '@/services/spotify'
 import { useAuth } from '@/hooks/useAuth'
 import type { SearchFilters } from '@/types'
@@ -13,7 +13,6 @@ export const useSearchArtists = (filters: SearchFilters) => {
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3
@@ -31,7 +30,6 @@ export const useArtist = (artistId: string) => {
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3
@@ -49,7 +47,6 @@ export const useArtistTopTracks = (artistId: string) => {
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3
@@ -57,17 +54,22 @@ export const useArtistTopTracks = (artistId: string) => {
   })
 }
 
-export const useArtistAlbums = (artistId: string, page: number = 0, limit: number = 20) => {
+export const useArtistAlbums = (artistId: string, limit: number = 20) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
-    queryKey: ['artistAlbums', artistId, page, limit],
-    queryFn: () => spotifyService.getArtistAlbums(artistId, page * limit, limit),
+  return useInfiniteQuery({
+    queryKey: ['artistAlbums', artistId, limit],
+    queryFn: ({ pageParam = 0 }: { pageParam?: number }) => 
+      spotifyService.getArtistAlbums(artistId, pageParam * limit, limit),
+    initialPageParam: 0,
     enabled: !!artistId && isAuthenticated,
     staleTime: 10 * 60 * 1000,
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+      if (lastPage.items.length < limit) return undefined
+      return allPages.length
+    },
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3
@@ -85,7 +87,6 @@ export const useAlbum = (albumId: string) => {
     staleTime: 15 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3
@@ -103,7 +104,6 @@ export const useAlbumTracks = (albumId: string) => {
     staleTime: 15 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
-        useAuthStore.getState().clearTokens()
         return false
       }
       return failureCount < 3

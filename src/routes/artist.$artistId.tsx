@@ -5,12 +5,10 @@ import { Link } from '@tanstack/react-router'
 import { Button, Image } from '@/components/atoms'
 import { AlbumGrid, TrackList } from '@/components/organisms'
 import { useArtist, useArtistTopTracks, useArtistAlbums } from '@/hooks/useSpotify'
-import { useQueryParams } from '@/hooks/useQueryParams'
-import type { SearchFilters } from '@/types'
 
 type ArtistSearchParams = {
   albumFilter?: string
-  albumPage?: number
+  albumPage: number
 }
 
 export const Route = createFileRoute('/artist/$artistId')({
@@ -23,17 +21,14 @@ export const Route = createFileRoute('/artist/$artistId')({
 
 function ArtistPage() {
   const { artistId } = Route.useParams()
-  const { params, updateParams } = useQueryParams<ArtistSearchParams>()
+  const search = Route.useSearch()
+  const navigate = Route.useNavigate()
   const [activeTab, setActiveTab] = useState<'tracks' | 'albums'>('tracks')
 
   const { data: artist, isLoading: artistLoading, error: artistError } = useArtist(artistId)
   const { data: topTracks, isLoading: tracksLoading } = useArtistTopTracks(artistId)
 
-  const albumFilters: SearchFilters = {
-    albumName: params.albumFilter,
-    page: ((params.albumPage as number) || 1) - 1,
-    limit: 20,
-  }
+  const albumLimit = 20
 
   const {
     data: albumsData,
@@ -41,12 +36,17 @@ function ArtistPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useArtistAlbums(artistId, albumFilters)
+  } = useArtistAlbums(artistId, albumLimit)
 
   const albums = albumsData?.pages.flatMap(page => page.items) || []
 
   const handleAlbumFilterChange = (filter: string) => {
-    updateParams({ albumFilter: filter || undefined, albumPage: 1 })
+    navigate({
+      search: {
+        albumFilter: filter || undefined,
+        albumPage: 1,
+      },
+    })
   }
 
   const handleLoadMoreAlbums = () => {
@@ -198,7 +198,7 @@ function ArtistPage() {
               <input
                 type="text"
                 placeholder="Filtrar álbuns..."
-                value={params.albumFilter || ''}
+                value={search.albumFilter || ''}
                 onChange={(e) => handleAlbumFilterChange(e.target.value)}
                 className="input-field w-full sm:w-64"
               />

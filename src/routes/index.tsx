@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
 import { SearchBar, ArtistGrid, SpotifyLogin } from '@/components'
 import { useSearchArtists } from '@/hooks/useSpotify'
-import { useQueryParams } from '@/hooks/useQueryParams'
 import { useAuth } from '@/hooks/useAuth'
 import type { SearchFilters } from '@/types'
 
@@ -20,13 +19,14 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const { params, updateParams } = useQueryParams<HomeSearchParams>()
-  const [hasSearched, setHasSearched] = useState(!!params.q)
+  const search = Route.useSearch()
+  const navigate = Route.useNavigate()
+  const [hasSearched, setHasSearched] = useState(!!search.q)
   const { isAuthenticated } = useAuth()
 
   const searchFilters: SearchFilters = {
-    query: params.q || '',
-    page: ((params.page as number) || 1) - 1,
+    query: search.q || '',
+    page: ((search.page as number) || 1) - 1,
     limit: 20,
   }
 
@@ -34,13 +34,17 @@ function Home() {
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim()) {
-      updateParams({ q: query, page: 1 })
+      navigate({
+        search: { q: query, page: 1 }
+      })
       setHasSearched(true)
     } else {
-      updateParams({ q: undefined, page: undefined })
+      navigate({
+        search: { q: undefined, page: undefined }
+      })
       setHasSearched(false)
     }
-  }, [updateParams])
+  }, [navigate])
 
   if (!isAuthenticated) {
     return (
@@ -73,7 +77,7 @@ function Home() {
         <SearchBar
           placeholder="Buscar artistas..."
           onSearch={handleSearch}
-          initialValue={params.q || ''}
+          initialValue={search.q || ''}
         />
       </div>
 
