@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
-import { SearchBar, ArtistGrid, SpotifyLogin } from '@/components'
-import { useSearchArtists } from '@/hooks/useSpotify'
+import { SearchBar, AlbumGrid, SpotifyLogin } from '@/components'
+import { useSearchAlbums } from '@/hooks/useSpotify'
 import { useAuth } from '@/hooks/useAuth'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
 import type { SearchFilters } from '@/types'
@@ -31,7 +31,7 @@ function Home() {
     limit: 20,
   }
 
-  const { data, isLoading, error } = useSearchArtists(searchFilters)
+  const { data, isLoading, error } = useSearchAlbums(searchFilters)
 
   const handleSearch = useCallback((query: string) => {
     if (query.trim()) {
@@ -50,7 +50,6 @@ function Home() {
   if (!isAuthenticated) {
     return (
       <>
-        {/* Desktop Layout */}
         <div className="hidden md:block container py-16">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-4">
@@ -63,7 +62,6 @@ function Home() {
           <SpotifyLogin />
         </div>
 
-        {/* Mobile Layout */}
         <MobileLayout title="Purplefy" showBack={false} showTabs={false}>
           <div className="px-4 py-8">
             <div className="text-center mb-12">
@@ -83,7 +81,6 @@ function Home() {
 
   return (
     <>
-      {/* Desktop Layout */}
       <div className="hidden md:block container py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-4">
@@ -96,7 +93,7 @@ function Home() {
 
         <div className="max-w-2xl mx-auto mb-8">
           <SearchBar
-            placeholder="Buscar artistas..."
+            placeholder="Buscar álbuns por artista..."
             onSearch={handleSearch}
             initialValue={search.q || ''}
           />
@@ -118,9 +115,10 @@ function Home() {
         )}
 
         {hasSearched && !error && (
-          <ArtistGrid
-            artists={data?.items || []}
+          <AlbumGrid
+            albums={data?.items || []}
             loading={isLoading}
+            emptyKind="search"
           />
         )}
 
@@ -137,7 +135,6 @@ function Home() {
         )}
       </div>
 
-      {/* Mobile Layout */}
       <MobileLayout title="Buscar" showBack={false}>
         <div className="px-4 py-4">
           <div className="mb-6">
@@ -161,9 +158,10 @@ function Home() {
           )}
 
           {hasSearched && !error && (
-            <ArtistGrid
-              artists={data?.items || []}
+            <AlbumGrid
+              albums={data?.items || []}
               loading={isLoading}
+              emptyKind="search"
             />
           )}
 

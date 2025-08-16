@@ -39,7 +39,6 @@ function AlbumPage() {
   if (albumLoading) {
     return (
       <>
-        {/* Desktop Loading */}
         <div className="hidden md:block container py-8">
           <div className="skeleton h-8 w-24 mb-6" />
           <div className="flex flex-col md:flex-row gap-8 mb-8">
@@ -53,7 +52,6 @@ function AlbumPage() {
           </div>
         </div>
 
-        {/* Mobile Loading */}
         <MobileLayout title="Carregando..." backTo="/">
           <div className="px-4 py-4">
             <div className="flex flex-col gap-4 mb-6">
@@ -78,7 +76,6 @@ function AlbumPage() {
 
   return (
     <>
-      {/* Desktop Layout */}
       <div className="hidden md:block container py-8">
         <Link to="/" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
@@ -137,10 +134,8 @@ function AlbumPage() {
         />
       </div>
 
-      {/* Mobile Layout */}
       <MobileLayout title={album.name} backTo="/" showTabs={false}>
         <div className="px-4 py-4">
-          {/* Album Header */}
           <div className="flex flex-col items-center text-center mb-6">
             <div className="w-64 h-64 mb-4">
               <Image
@@ -185,7 +180,7 @@ function AlbumPage() {
             </Button>
           </div>
 
-          {/* Track List */}
+         
           <TrackList
             tracks={tracks}
             loading={tracksLoading}

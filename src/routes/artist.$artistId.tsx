@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeft, Users, ExternalLink } from 'lucide-react'
-import { useArtist, useArtistTopTracks, useArtistAlbums, useNewReleases } from '../hooks/useSpotify'
+import { useArtist, useArtistTopTracks, useArtistAlbums, useNewReleases, useSearchAlbums } from '../hooks/useSpotify'
 import { useDebounce } from '../hooks/useDebounce'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
 import { AlbumGrid } from '../components/organisms/AlbumGrid/AlbumGrid'
@@ -49,7 +49,17 @@ function ArtistPage() {
     isFetchingNextPage,
   } = useArtistAlbums(artistId, albumLimit, debouncedAlbumFilter)
 
-  const albums = albumsData?.pages.flatMap(page => page.items) || []
+  const { data: albumsSearch, isLoading: albumsSearchLoading } = useSearchAlbums({
+    artistName: artist?.name,
+    albumName: debouncedAlbumFilter || undefined,
+    page: ((search.albumPage as number) || 1) - 1,
+    limit: albumLimit,
+  })
+
+  const isFiltering = !!debouncedAlbumFilter
+  const albums = isFiltering
+    ? (albumsSearch?.items || [])
+    : (albumsData?.pages.flatMap(page => page.items) || [])
 
   // New releases (global)
   const { data: newReleasesData, isLoading: newReleasesLoading } = useNewReleases(12, 'BR')
@@ -72,7 +82,6 @@ function ArtistPage() {
   if (artistError) {
     return (
       <>
-        {/* Desktop Layout */}
         <div className="hidden md:block container py-8">
           <div className="text-center py-12">
             <div className="text-6xl mb-4">⚠️</div>
@@ -88,7 +97,6 @@ function ArtistPage() {
           </div>
         </div>
 
-        {/* Mobile Layout */}
         <MobileLayout title="Erro" backTo="/">
           <div className="px-4 py-8">
             <div className="text-center">
@@ -109,7 +117,6 @@ function ArtistPage() {
   if (artistLoading) {
     return (
       <>
-        {/* Desktop Loading */}
         <div className="hidden md:block container py-8">
           <div className="skeleton h-8 w-24 mb-6" />
           <div className="flex flex-col md:flex-row gap-8 mb-8">
@@ -122,7 +129,6 @@ function ArtistPage() {
           </div>
         </div>
 
-        {/* Mobile Loading */}
         <MobileLayout title="Carregando..." backTo="/">
           <div className="px-4 py-4">
             <div className="flex flex-col gap-4 mb-6">
@@ -145,7 +151,6 @@ function ArtistPage() {
 
   return (
     <>
-      {/* Desktop Layout */}
       <div className="hidden md:block container py-8">
         <Link to="/" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
@@ -267,13 +272,12 @@ function ArtistPage() {
 
             <AlbumGrid
               albums={albums}
-              loading={albumsLoading}
-              hasNextPage={hasNextPage}
-              onLoadMore={handleLoadMoreAlbums}
-              loadingMore={isFetchingNextPage}
+              loading={isFiltering ? albumsSearchLoading : albumsLoading}
+              hasNextPage={isFiltering ? false : hasNextPage}
+              onLoadMore={isFiltering ? undefined : handleLoadMoreAlbums}
+              loadingMore={isFiltering ? false : isFetchingNextPage}
             />
 
-            {/* New Releases - Desktop */}
             <div className="pt-4">
               <h2 className="text-2xl font-bold text-purplefy-white mb-4">Novos Lançamentos</h2>
               <AlbumGrid
@@ -288,10 +292,8 @@ function ArtistPage() {
         )}
       </div>
 
-      {/* Mobile Layout */}
       <MobileLayout title={artist.name} backTo="/" showTabs={false}>
         <div className="px-4 py-4">
-          {/* Artist Header */}
           <div className="flex flex-col items-center text-center mb-6">
             <div className="w-48 h-48 mb-4">
               <Image
@@ -348,7 +350,6 @@ function ArtistPage() {
             </Button>
           </div>
 
-          {/* Mobile Tabs - underline style */}
           <div className="mb-4" role="tablist" aria-label="Selecionar conteúdo do artista">
             <div className="flex items-center justify-between border-b border-purplefy-medium-gray/60">
               <button
@@ -384,7 +385,6 @@ function ArtistPage() {
             </div>
           </div>
 
-          {/* Content */}
           {activeTab === 'tracks' && (
             <TrackList
               tracks={topTracks || []}
@@ -407,13 +407,12 @@ function ArtistPage() {
 
               <AlbumGrid
                 albums={albums}
-                loading={albumsLoading}
-                hasNextPage={hasNextPage}
-                onLoadMore={handleLoadMoreAlbums}
-                loadingMore={isFetchingNextPage}
+                loading={isFiltering ? albumsSearchLoading : albumsLoading}
+                hasNextPage={isFiltering ? false : hasNextPage}
+                onLoadMore={isFiltering ? undefined : handleLoadMoreAlbums}
+                loadingMore={isFiltering ? false : isFetchingNextPage}
               />
 
-              {/* New Releases - Mobile */}
               <div className="pt-2">
                 <h2 className="text-xl font-bold text-purplefy-white mb-3">Novos Lançamentos</h2>
                 <AlbumGrid

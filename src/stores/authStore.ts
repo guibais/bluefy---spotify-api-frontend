@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
+import type { StateStorage } from 'zustand/middleware'
 
 type SpotifyTokenData = {
   access_token: string
@@ -69,6 +70,36 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         expiresAt: state.expiresAt,
+      }),
+      storage: createJSONStorage(() => {
+        const cookieStorage: StateStorage = {
+          getItem: (name) => {
+            if (typeof document === 'undefined') return null
+            const match = document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))
+            if (!match) return null
+            const value = decodeURIComponent(match.split('=')[1] || '')
+            return value
+          },
+          setItem: (name, value) => {
+            if (typeof document === 'undefined') return
+            let maxAge = 60 * 60
+            try {
+              const parsed = JSON.parse(value as string)
+              const expiresAt = parsed?.state?.expiresAt || parsed?.expiresAt
+              if (typeof expiresAt === 'number') {
+                const seconds = Math.max(1, Math.floor((expiresAt - Date.now()) / 1000))
+                maxAge = seconds
+              }
+            } catch {}
+            const encoded = encodeURIComponent(value as string)
+            document.cookie = `${name}=${encoded}; Path=/; Max-Age=${maxAge}; SameSite=Strict; Secure`
+          },
+          removeItem: (name) => {
+            if (typeof document === 'undefined') return
+            document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Strict; Secure`
+          },
+        }
+        return cookieStorage
       }),
     }
   )

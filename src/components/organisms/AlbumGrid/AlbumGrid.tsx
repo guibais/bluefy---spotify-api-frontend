@@ -9,6 +9,7 @@ type AlbumGridProps = {
   onLoadMore?: () => void
   loadingMore?: boolean
   className?: string
+  emptyKind?: 'artist' | 'search'
 }
 
 export const AlbumGrid = ({ 
@@ -17,7 +18,8 @@ export const AlbumGrid = ({
   hasNextPage = false,
   onLoadMore,
   loadingMore = false,
-  className 
+  className,
+  emptyKind = 'artist',
 }: AlbumGridProps) => {
   if (loading) {
     return (
@@ -35,6 +37,10 @@ export const AlbumGrid = ({
   }
 
   if (albums.length === 0) {
+    const emptyTextMap: Record<'artist' | 'search', string> = {
+      artist: 'Este artista ainda não possui álbuns disponíveis',
+      search: 'Nenhum álbum corresponde à sua busca',
+    }
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">💿</div>
@@ -42,7 +48,7 @@ export const AlbumGrid = ({
           Nenhum álbum encontrado
         </h3>
         <p className="text-spotify-light-gray">
-          Este artista ainda não possui álbuns disponíveis
+          {emptyTextMap[emptyKind]}
         </p>
       </div>
     )

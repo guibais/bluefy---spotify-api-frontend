@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { useMe, useMyPlaylists } from '@/hooks/useSpotify'
 import type { SpotifyPlaylist } from '@/types'
@@ -24,10 +24,7 @@ function ProfilePage() {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">⚠️</div>
           <h3 className="text-xl font-semibold text-purplefy-white mb-2">Erro ao carregar perfil</h3>
-          <p className="text-purplefy-light-gray mb-4">{meError.message}</p>
-          <Link to="/">
-            <Button variant="primary">Voltar</Button>
-          </Link>
+          <p className="text-purplefy-light-gray">{meError.message}</p>
         </div>
       </div>
     )
@@ -82,7 +79,6 @@ function ProfilePage() {
 
         
 
-        {/* My Playlists */}
         <section>
           <h2 className="text-xl font-semibold text-purplefy-white mb-4">Minhas playlists</h2>
           {playlistsLoading ? (
@@ -122,7 +118,7 @@ function ProfilePage() {
         </section>
       </div>
 
-      <MobileLayout title="Perfil" backTo="/" showTabs={false}>
+      <MobileLayout title="Perfil" showTabs={false}>
         <div className="px-4 py-4">
           {meLoading ? (
             <div className="flex items-center gap-4 mb-6">
@@ -162,7 +158,6 @@ function ProfilePage() {
 
           
 
-          {/* Mobile Playlists */}
           <div>
             <h2 className="text-lg font-semibold text-spotify-white mb-3">Playlists</h2>
             {playlistsLoading ? (
