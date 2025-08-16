@@ -110,3 +110,89 @@ export const useAlbumTracks = (albumId: string) => {
     },
   })
 }
+
+export const useMe = () => {
+  const { isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['me'],
+    queryFn: () => spotifyService.getMe(),
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
+export const useMyTopArtists = (limit: number = 20, timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term') => {
+  const { isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['myTopArtists', limit, timeRange],
+    queryFn: () => spotifyService.getMyTopArtists(limit, timeRange),
+    enabled: isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
+export const useMyTopTracks = (limit: number = 20, timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term') => {
+  const { isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['myTopTracks', limit, timeRange],
+    queryFn: () => spotifyService.getMyTopTracks(limit, timeRange),
+    enabled: isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
+// Playlists
+export const useMyPlaylists = (limit: number = 20) => {
+  const { isAuthenticated } = useAuth()
+  return useInfiniteQuery({
+    queryKey: ['myPlaylists', limit],
+    queryFn: ({ pageParam = 0 }: { pageParam?: number }) => spotifyService.getMyPlaylists(pageParam * limit, limit),
+    initialPageParam: 0,
+    enabled: isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+      if (lastPage.items.length < limit) return undefined
+      return allPages.length
+    },
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
+export const useFeaturedPlaylists = (limit: number = 20, locale?: string) => {
+  const { isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['featuredPlaylists', limit, locale],
+    queryFn: () => spotifyService.getFeaturedPlaylists(0, limit, locale),
+    enabled: isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}

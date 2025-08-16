@@ -77,3 +77,36 @@ export type PaginationInfo = {
   hasNext: boolean
   hasPrevious: boolean
 }
+
+// User / Profile
+export type SpotifyUser = {
+  id: string
+  display_name: string | null
+  email?: string
+  images: SpotifyImage[]
+  country?: string
+  followers?: { total: number }
+  product?: 'premium' | 'free' | 'open'
+  external_urls?: { spotify: string }
+}
+
+// Playlists
+export type SpotifyPlaylistOwner = {
+  id: string
+  display_name: string | null
+  external_urls?: { spotify: string }
+  type?: 'user'
+  uri?: string
+}
+
+export type SpotifyPlaylist = {
+  id: string
+  name: string
+  description?: string | null
+  images: SpotifyImage[]
+  public?: boolean | null
+  collaborative?: boolean
+  owner: SpotifyPlaylistOwner
+  external_urls: { spotify: string }
+  snapshot_id?: string
+}

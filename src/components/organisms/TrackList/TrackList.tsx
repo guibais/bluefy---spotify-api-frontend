@@ -20,7 +20,7 @@ export const TrackList = ({
     return (
       <div className={`space-y-2 ${className || ''}`}>
         {title && (
-          <h3 className="text-xl font-bold text-spotify-white mb-4">{title}</h3>
+          <h3 className="text-xl font-bold text-purplefy-white mb-4">{title}</h3>
         )}
         {Array.from({ length: 5 }).map((_, index) => (
           <div key={index} className="flex items-center gap-4 p-3">
@@ -41,10 +41,10 @@ export const TrackList = ({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🎶</div>
-        <h3 className="text-xl font-semibold text-spotify-white mb-2">
+        <h3 className="text-xl font-semibold text-purplefy-white mb-2">
           Nenhuma música encontrada
         </h3>
-        <p className="text-spotify-light-gray">
+        <p className="text-purplefy-light-gray">
           Não há faixas disponíveis no momento
         </p>
       </div>
@@ -54,7 +54,7 @@ export const TrackList = ({
   return (
     <div className={`space-y-2 ${className || ''}`}>
       {title && (
-        <h3 className="text-xl font-bold text-spotify-white mb-4">{title}</h3>
+        <h3 className="text-xl font-bold text-purplefy-white mb-4">{title}</h3>
       )}
       {tracks.map((track, index) => (
         <TrackItem

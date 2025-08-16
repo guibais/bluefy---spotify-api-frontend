@@ -180,6 +180,7 @@ function Home() {
           )}
         </div>
       </MobileLayout>
+
     </>
   )
 }

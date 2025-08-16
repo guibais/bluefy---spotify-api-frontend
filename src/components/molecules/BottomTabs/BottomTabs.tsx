@@ -1,4 +1,4 @@
-import { Home, Search, User, Heart } from 'lucide-react'
+import { Home, Search, User } from 'lucide-react'
 import { Link, useLocation } from '@tanstack/react-router'
 
 type Tab = {
@@ -13,19 +13,13 @@ const tabs: Tab[] = [
     id: 'home',
     label: 'Início',
     icon: Home,
-    to: '/'
+    to: '/home'
   },
   {
     id: 'search',
     label: 'Buscar',
     icon: Search,
     to: '/'
-  },
-  {
-    id: 'favorites',
-    label: 'Favoritos',
-    icon: Heart,
-    to: '/favorites'
   },
   {
     id: 'profile',
@@ -64,3 +58,4 @@ export const BottomTabs = () => {
     </nav>
   )
 }
+

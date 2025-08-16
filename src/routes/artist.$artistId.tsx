@@ -8,6 +8,7 @@ import { AlbumGrid } from '../components/organisms/AlbumGrid/AlbumGrid'
 import { Button } from '../components/atoms/Button/Button'
 import { Image } from '../components/atoms/Image/Image'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
+ 
 
 type ArtistSearchParams = {
   albumFilter?: string
