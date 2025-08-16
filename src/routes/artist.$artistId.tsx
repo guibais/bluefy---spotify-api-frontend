@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
 import { ArrowLeft, Users, ExternalLink } from 'lucide-react'
-import { useArtist, useArtistTopTracks, useArtistAlbums } from '../hooks/useSpotify'
+import { useArtist, useArtistTopTracks, useArtistAlbums, useNewReleases } from '../hooks/useSpotify'
 import { useDebounce } from '../hooks/useDebounce'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
 import { AlbumGrid } from '../components/organisms/AlbumGrid/AlbumGrid'
@@ -13,6 +12,7 @@ import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
 type ArtistSearchParams = {
   albumFilter?: string
   albumPage: number
+  tab?: 'tracks' | 'albums'
 }
 
 export const Route = createFileRoute('/artist/$artistId')({
@@ -20,6 +20,12 @@ export const Route = createFileRoute('/artist/$artistId')({
   validateSearch: (search: Record<string, unknown>): ArtistSearchParams => ({
     albumFilter: typeof search.albumFilter === 'string' ? search.albumFilter : undefined,
     albumPage: typeof search.albumPage === 'number' ? search.albumPage : 1,
+    tab:
+      search.tab === 'albums'
+        ? 'albums'
+        : search.tab === 'tracks'
+          ? 'tracks'
+          : undefined,
   }),
 })
 
@@ -27,7 +33,7 @@ function ArtistPage() {
   const { artistId } = Route.useParams()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const [activeTab, setActiveTab] = useState<'tracks' | 'albums'>('tracks')
+  const activeTab: 'tracks' | 'albums' = (search.tab as 'tracks' | 'albums') ?? 'tracks'
 
   const { data: artist, isLoading: artistLoading, error: artistError } = useArtist(artistId)
   const { data: topTracks, isLoading: tracksLoading } = useArtistTopTracks(artistId)
@@ -45,12 +51,17 @@ function ArtistPage() {
 
   const albums = albumsData?.pages.flatMap(page => page.items) || []
 
+  // New releases (global)
+  const { data: newReleasesData, isLoading: newReleasesLoading } = useNewReleases(12, 'BR')
+  const newReleases = newReleasesData?.albums.items || []
+
   const handleAlbumFilterChange = (filter: string) => {
     navigate({
-      search: {
+      search: (prev) => ({
+        ...prev,
         albumFilter: filter || undefined,
         albumPage: 1,
-      },
+      }),
     })
   }
 
@@ -201,7 +212,11 @@ function ArtistPage() {
         <div className="border-b border-purplefy-medium-gray mb-8">
           <nav className="flex gap-8">
             <button
-              onClick={() => setActiveTab('tracks')}
+              onClick={() =>
+                navigate({
+                  search: (prev) => ({ ...prev, tab: 'tracks' as const }),
+                })
+              }
               className={`pb-4 px-1 border-b-2 font-medium transition-colors ${
                 activeTab === 'tracks'
                   ? 'border-purplefy-primary text-purplefy-primary'
@@ -211,7 +226,11 @@ function ArtistPage() {
               Principais Músicas
             </button>
             <button
-              onClick={() => setActiveTab('albums')}
+              onClick={() =>
+                navigate({
+                  search: (prev) => ({ ...prev, tab: 'albums' as const }),
+                })
+              }
               className={`pb-4 px-1 border-b-2 font-medium transition-colors ${
                 activeTab === 'albums'
                   ? 'border-purplefy-primary text-purplefy-primary'
@@ -253,6 +272,18 @@ function ArtistPage() {
               onLoadMore={handleLoadMoreAlbums}
               loadingMore={isFetchingNextPage}
             />
+
+            {/* New Releases - Desktop */}
+            <div className="pt-4">
+              <h2 className="text-2xl font-bold text-purplefy-white mb-4">Novos Lançamentos</h2>
+              <AlbumGrid
+                albums={newReleases}
+                loading={newReleasesLoading}
+                hasNextPage={false}
+                onLoadMore={() => {}}
+                loadingMore={false}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -317,28 +348,40 @@ function ArtistPage() {
             </Button>
           </div>
 
-          {/* Mobile Tabs */}
-          <div className="flex bg-purplefy-medium-gray rounded-lg p-1 mb-6">
-            <button
-              onClick={() => setActiveTab('tracks')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                activeTab === 'tracks'
-                  ? 'bg-purplefy-primary text-purplefy-white shadow-sm'
-                  : 'text-purplefy-light-gray hover:text-purplefy-white'
-              }`}
-            >
-              Músicas
-            </button>
-            <button
-              onClick={() => setActiveTab('albums')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                activeTab === 'albums'
-                  ? 'bg-purplefy-primary text-purplefy-white shadow-sm'
-                  : 'text-purplefy-light-gray hover:text-purplefy-white'
-              }`}
-            >
-              Álbuns
-            </button>
+          {/* Mobile Tabs - underline style */}
+          <div className="mb-4" role="tablist" aria-label="Selecionar conteúdo do artista">
+            <div className="flex items-center justify-between border-b border-purplefy-medium-gray/60">
+              <button
+                role="tab"
+                aria-selected={activeTab === 'tracks'}
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, tab: 'tracks' as const }) })
+                }
+                className={`relative flex-1 py-3 text-sm font-semibold text-center transition-colors ${
+                  activeTab === 'tracks' ? 'text-white' : 'text-purplefy-light-gray'
+                }`}
+              >
+                Músicas
+                {activeTab === 'tracks' && (
+                  <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
+                )}
+              </button>
+              <button
+                role="tab"
+                aria-selected={activeTab === 'albums'}
+                onClick={() =>
+                  navigate({ search: (prev) => ({ ...prev, tab: 'albums' as const }) })
+                }
+                className={`relative flex-1 py-3 text-sm font-semibold text-center transition-colors ${
+                  activeTab === 'albums' ? 'text-white' : 'text-purplefy-light-gray'
+                }`}
+              >
+                Álbuns
+                {activeTab === 'albums' && (
+                  <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Content */}
@@ -369,6 +412,18 @@ function ArtistPage() {
                 onLoadMore={handleLoadMoreAlbums}
                 loadingMore={isFetchingNextPage}
               />
+
+              {/* New Releases - Mobile */}
+              <div className="pt-2">
+                <h2 className="text-xl font-bold text-purplefy-white mb-3">Novos Lançamentos</h2>
+                <AlbumGrid
+                  albums={newReleases}
+                  loading={newReleasesLoading}
+                  hasNextPage={false}
+                  onLoadMore={() => {}}
+                  loadingMore={false}
+                />
+              </div>
             </div>
           )}
         </div>

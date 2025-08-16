@@ -125,12 +125,14 @@ export const spotifyService = {
     return response.data
   },
 
-  getFeaturedPlaylists: async (offset: number = 0, limit: number = 20, locale?: string): Promise<{ message: string; playlists: SpotifySearchResponse<SpotifyPlaylist> }> => {
+  
+  // New Releases (global)
+  getNewReleases: async (offset: number = 0, limit: number = 20, country: string = 'BR'): Promise<{ albums: SpotifySearchResponse<SpotifyAlbum> }> => {
     const params = new URLSearchParams()
     params.append('limit', String(limit))
     params.append('offset', String(offset))
-    if (locale) params.append('locale', locale)
-    const response = await spotifyApi.get(`/browse/featured-playlists?${params.toString()}`)
+    if (country) params.append('country', country)
+    const response = await spotifyApi.get(`/browse/new-releases?${params.toString()}`)
     return response.data
   },
 }

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { MobileLayout } from '@/components/organisms/MobileLayout/MobileLayout'
-import { useFeaturedPlaylists, useMyPlaylists } from '@/hooks/useSpotify'
+import { useNewReleases, useMyPlaylists } from '@/hooks/useSpotify'
 import { Image } from '@/components/atoms/Image/Image'
 import { Button } from '@/components/atoms/Button/Button'
 
@@ -60,10 +60,10 @@ function Section({ title, children, action }: { title: string; children: React.R
 
 function HomePage() {
   const myPlaylists = useMyPlaylists(20)
-  const featured = useFeaturedPlaylists(12, 'pt_BR')
+  const newReleases = useNewReleases(12, 'BR')
 
   const myItems = myPlaylists.data?.pages.flatMap((p) => p.items) ?? []
-  const featuredItems = featured.data?.playlists.items ?? []
+  const releases = newReleases.data?.albums.items ?? []
 
   const loadMore = () => {
     if (myPlaylists.hasNextPage && !myPlaylists.isFetchingNextPage) myPlaylists.fetchNextPage()
@@ -104,8 +104,8 @@ function HomePage() {
           )}
         </Section>
 
-        <Section title={featured.data?.message || 'Em Destaque'}>
-          {featured.isLoading ? (
+        <Section title="Novos Lançamentos">
+          {newReleases.isLoading ? (
             <div className="grid grid-cols-6 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="h-48 rounded-xl bg-purplefy-dark/40 animate-pulse" />
@@ -113,14 +113,14 @@ function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {featuredItems.map((p) => (
+              {releases.map((a) => (
                 <PlaylistCard
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  image={p.images?.[0]?.url}
-                  subtitle={p.owner?.display_name || ''}
-                  spotifyUrl={p.external_urls?.spotify}
+                  key={a.id}
+                  id={a.id}
+                  name={a.name}
+                  image={a.images?.[0]?.url}
+                  subtitle={a.artists?.[0]?.name || ''}
+                  spotifyUrl={a.external_urls?.spotify}
                 />
               ))}
             </div>
@@ -162,8 +162,8 @@ function HomePage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-purplefy-white mb-3">Em Destaque</h2>
-            {featured.isLoading ? (
+            <h2 className="text-lg font-semibold text-purplefy-white mb-3">Novos Lançamentos</h2>
+            {newReleases.isLoading ? (
               <div className="grid grid-cols-2 gap-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="h-40 rounded-xl bg-purplefy-dark/40 animate-pulse" />
@@ -171,14 +171,14 @@ function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                {featuredItems.slice(0, 8).map((p) => (
+                {releases.slice(0, 8).map((a) => (
                   <PlaylistCard
-                    key={p.id}
-                    id={p.id}
-                    name={p.name}
-                    image={p.images?.[0]?.url}
-                    subtitle={p.owner?.display_name || ''}
-                    spotifyUrl={p.external_urls?.spotify}
+                    key={a.id}
+                    id={a.id}
+                    name={a.name}
+                    image={a.images?.[0]?.url}
+                    subtitle={a.artists?.[0]?.name || ''}
+                    spotifyUrl={a.external_urls?.spotify}
                   />
                 ))}
               </div>

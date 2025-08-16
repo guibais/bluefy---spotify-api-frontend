@@ -181,11 +181,14 @@ export const useMyPlaylists = (limit: number = 20) => {
   })
 }
 
-export const useFeaturedPlaylists = (limit: number = 20, locale?: string) => {
+// deprecated useFeaturedPlaylists removed
+
+// New Releases
+export const useNewReleases = (limit: number = 12, country: string = 'BR') => {
   const { isAuthenticated } = useAuth()
   return useQuery({
-    queryKey: ['featuredPlaylists', limit, locale],
-    queryFn: () => spotifyService.getFeaturedPlaylists(0, limit, locale),
+    queryKey: ['newReleases', limit, country],
+    queryFn: () => spotifyService.getNewReleases(0, limit, country),
     enabled: isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
