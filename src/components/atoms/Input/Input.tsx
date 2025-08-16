@@ -1,4 +1,5 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import type { InputHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
 import { clsx } from 'clsx'
 import { Search, X } from 'lucide-react'
 

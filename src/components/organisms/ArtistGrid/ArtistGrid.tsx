@@ -1,5 +1,4 @@
 import { ArtistCard } from '@/components/molecules'
-import { Loading } from '@/components/atoms'
 import type { SpotifyArtist } from '@/types'
 
 type ArtistGridProps = {

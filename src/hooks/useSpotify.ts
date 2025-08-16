@@ -1,18 +1,27 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
 import { spotifyService } from '@/services/spotify'
 import { useAuth } from '@/hooks/useAuth'
-import type { SearchFilters } from '@/types'
+import type {
+  SearchFilters,
+  SpotifyAlbum,
+  SpotifyArtist,
+  SpotifyPlaylist,
+  SpotifySearchResponse,
+  SpotifyTimeRange,
+  SpotifyTrack,
+  SpotifyUser,
+} from '@/types'
 
 export const useSearchArtists = (filters: SearchFilters) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
+  return useQuery<SpotifySearchResponse<SpotifyArtist>>({
     queryKey: ['searchArtists', filters],
     queryFn: () => spotifyService.searchArtists(filters),
     enabled: !!filters.query && isAuthenticated,
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -23,13 +32,13 @@ export const useSearchArtists = (filters: SearchFilters) => {
 export const useArtist = (artistId: string) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
+  return useQuery<SpotifyArtist>({
     queryKey: ['artist', artistId],
     queryFn: () => spotifyService.getArtist(artistId),
     enabled: !!artistId && isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -40,13 +49,13 @@ export const useArtist = (artistId: string) => {
 export const useArtistTopTracks = (artistId: string) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
+  return useQuery<SpotifyTrack[]>({
     queryKey: ['artistTopTracks', artistId],
     queryFn: () => spotifyService.getArtistTopTracks(artistId),
     enabled: !!artistId && isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -57,19 +66,18 @@ export const useArtistTopTracks = (artistId: string) => {
 export const useArtistAlbums = (artistId: string, limit: number = 20, albumFilter?: string) => {
   const { isAuthenticated } = useAuth()
   
-  return useInfiniteQuery({
+  return useInfiniteQuery<SpotifySearchResponse<SpotifyAlbum>>({
     queryKey: ['artistAlbums', artistId, limit, albumFilter],
-    queryFn: ({ pageParam = 0 }: { pageParam?: number }) => 
-      spotifyService.getArtistAlbums(artistId, pageParam * limit, limit, albumFilter),
+    queryFn: ({ pageParam }) => {
+      const page = typeof pageParam === 'number' ? pageParam : 0
+      return spotifyService.getArtistAlbums(artistId, page * limit, limit, albumFilter)
+    },
     initialPageParam: 0,
     enabled: !!artistId && isAuthenticated,
     staleTime: 10 * 60 * 1000,
-    getNextPageParam: (lastPage: any, allPages: any[]) => {
-      if (lastPage.items.length < limit) return undefined
-      return allPages.length
-    },
+    getNextPageParam: (_lastPage, allPages) => allPages.length,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -80,13 +88,13 @@ export const useArtistAlbums = (artistId: string, limit: number = 20, albumFilte
 export const useAlbum = (albumId: string) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
+  return useQuery<SpotifyAlbum>({
     queryKey: ['album', albumId],
     queryFn: () => spotifyService.getAlbum(albumId),
     enabled: !!albumId && isAuthenticated,
     staleTime: 15 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -97,13 +105,13 @@ export const useAlbum = (albumId: string) => {
 export const useAlbumTracks = (albumId: string) => {
   const { isAuthenticated } = useAuth()
   
-  return useQuery({
+  return useQuery<SpotifySearchResponse<SpotifyTrack>>({
     queryKey: ['albumTracks', albumId],
     queryFn: () => spotifyService.getAlbumTracks(albumId),
     enabled: !!albumId && isAuthenticated,
     staleTime: 15 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -113,13 +121,13 @@ export const useAlbumTracks = (albumId: string) => {
 
 export const useMe = () => {
   const { isAuthenticated } = useAuth()
-  return useQuery({
+  return useQuery<SpotifyUser>({
     queryKey: ['me'],
     queryFn: () => spotifyService.getMe(),
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -127,15 +135,15 @@ export const useMe = () => {
   })
 }
 
-export const useMyTopArtists = (limit: number = 20, timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term') => {
+export const useMyTopArtists = (limit: number = 20, timeRange: SpotifyTimeRange = 'medium_term') => {
   const { isAuthenticated } = useAuth()
-  return useQuery({
+  return useQuery<SpotifySearchResponse<SpotifyArtist>>({
     queryKey: ['myTopArtists', limit, timeRange],
     queryFn: () => spotifyService.getMyTopArtists(limit, timeRange),
     enabled: isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -143,15 +151,15 @@ export const useMyTopArtists = (limit: number = 20, timeRange: 'short_term' | 'm
   })
 }
 
-export const useMyTopTracks = (limit: number = 20, timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term') => {
+export const useMyTopTracks = (limit: number = 20, timeRange: SpotifyTimeRange = 'medium_term') => {
   const { isAuthenticated } = useAuth()
-  return useQuery({
+  return useQuery<SpotifySearchResponse<SpotifyTrack>>({
     queryKey: ['myTopTracks', limit, timeRange],
     queryFn: () => spotifyService.getMyTopTracks(limit, timeRange),
     enabled: isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -162,18 +170,18 @@ export const useMyTopTracks = (limit: number = 20, timeRange: 'short_term' | 'me
 // Playlists
 export const useMyPlaylists = (limit: number = 20) => {
   const { isAuthenticated } = useAuth()
-  return useInfiniteQuery({
+  return useInfiniteQuery<SpotifySearchResponse<SpotifyPlaylist>>({
     queryKey: ['myPlaylists', limit],
-    queryFn: ({ pageParam = 0 }: { pageParam?: number }) => spotifyService.getMyPlaylists(pageParam * limit, limit),
+    queryFn: ({ pageParam }) => {
+      const page = typeof pageParam === 'number' ? pageParam : 0
+      return spotifyService.getMyPlaylists(page * limit, limit)
+    },
     initialPageParam: 0,
     enabled: isAuthenticated,
     staleTime: 10 * 60 * 1000,
-    getNextPageParam: (lastPage: any, allPages: any[]) => {
-      if (lastPage.items.length < limit) return undefined
-      return allPages.length
-    },
+    getNextPageParam: (_lastPage, allPages) => allPages.length,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3
@@ -186,13 +194,13 @@ export const useMyPlaylists = (limit: number = 20) => {
 // New Releases
 export const useNewReleases = (limit: number = 12, country: string = 'BR') => {
   const { isAuthenticated } = useAuth()
-  return useQuery({
+  return useQuery<{ albums: SpotifySearchResponse<SpotifyAlbum> }>({
     queryKey: ['newReleases', limit, country],
     queryFn: () => spotifyService.getNewReleases(0, limit, country),
     enabled: isAuthenticated,
     staleTime: 10 * 60 * 1000,
     retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) {
+      if ((error as any)?.response?.status === 401) {
         return false
       }
       return failureCount < 3

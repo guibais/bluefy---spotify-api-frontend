@@ -1,4 +1,5 @@
-import { ImgHTMLAttributes, useState } from 'react'
+import type { ImgHTMLAttributes } from 'react'
+import { useState } from 'react'
 import { clsx } from 'clsx'
 import { Music } from 'lucide-react'
 

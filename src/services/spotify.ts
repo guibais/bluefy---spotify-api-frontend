@@ -124,9 +124,6 @@ export const spotifyService = {
     const response = await spotifyApi.get(`/me/playlists?${params.toString()}`)
     return response.data
   },
-
-  
-  // New Releases (global)
   getNewReleases: async (offset: number = 0, limit: number = 20, country: string = 'BR'): Promise<{ albums: SpotifySearchResponse<SpotifyAlbum> }> => {
     const params = new URLSearchParams()
     params.append('limit', String(limit))

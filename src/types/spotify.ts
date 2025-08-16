@@ -4,6 +4,9 @@ export type SpotifyImage = {
   width: number | null
 }
 
+// Common
+export type SpotifyTimeRange = 'short_term' | 'medium_term' | 'long_term'
+
 export type SpotifyArtist = {
   id: string
   name: string
@@ -109,4 +112,5 @@ export type SpotifyPlaylist = {
   owner: SpotifyPlaylistOwner
   external_urls: { spotify: string }
   snapshot_id?: string
+  tracks?: { total: number }
 }
