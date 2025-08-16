@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef } from 'react'
+import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { clsx } from 'clsx'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost'
@@ -14,7 +14,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const buttonVariants = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
-  ghost: 'bg-transparent hover:bg-spotify-medium-gray text-spotify-light-gray hover:text-spotify-white',
+  ghost: 'bg-transparent hover:bg-purplefy-medium-gray text-purplefy-light-gray hover:text-purplefy-white',
 }
 
 const buttonSizes = {
