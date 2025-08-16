@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
-import { SearchBar, ArtistGrid } from '@/components'
+import { SearchBar, ArtistGrid, SpotifyLogin } from '@/components'
 import { useSearchArtists } from '@/hooks/useSpotify'
 import { useQueryParams } from '@/hooks/useQueryParams'
+import { useAuth } from '@/hooks/useAuth'
 import type { SearchFilters } from '@/types'
 
 type HomeSearchParams = {
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/')({
 function Home() {
   const { params, updateParams } = useQueryParams<HomeSearchParams>()
   const [hasSearched, setHasSearched] = useState(!!params.q)
+  const { isAuthenticated } = useAuth()
 
   const searchFilters: SearchFilters = {
     query: params.q || '',
@@ -39,6 +41,22 @@ function Home() {
       setHasSearched(false)
     }
   }, [updateParams])
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-4">
+            Kanastrafy
+          </h1>
+          <p className="text-spotify-light-gray text-lg md:text-xl max-w-2xl mx-auto mb-12">
+            Descubra e explore música do Spotify de forma simples e intuitiva
+          </p>
+        </div>
+        <SpotifyLogin />
+      </div>
+    )
+  }
 
   return (
     <div className="container py-8">

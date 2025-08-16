@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore'
 import type { SpotifyArtist, SpotifyAlbum, SpotifyTrack, SpotifySearchResponse, SearchFilters } from '@/types'
 
 const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1'
@@ -12,14 +13,25 @@ const spotifyApi = axios.create({
 
 spotifyApi.interceptors.request.use((config) => {
   const envToken = import.meta.env.VITE_SPOTIFY_TOKEN
-  const localToken = localStorage.getItem('spotify_token')
-  const token = envToken || localToken
+  const storeToken = useAuthStore.getState().getValidToken()
+  const token = envToken || storeToken
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  
   return config
 })
+
+spotifyApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().clearTokens()
+    }
+    return Promise.reject(error)
+  }
+)
 
 export const spotifyService = {
   searchArtists: async (filters: SearchFilters): Promise<SpotifySearchResponse<SpotifyArtist>> => {
@@ -49,13 +61,14 @@ export const spotifyService = {
 
   getArtistAlbums: async (
     artistId: string, 
-    filters: SearchFilters
+    offset: number = 0,
+    limit: number = 20
   ): Promise<SpotifySearchResponse<SpotifyAlbum>> => {
     const params = new URLSearchParams()
     params.append('include_groups', 'album,single')
     params.append('market', 'BR')
-    params.append('limit', String(filters.limit || 20))
-    params.append('offset', String((filters.page || 0) * (filters.limit || 20)))
+    params.append('limit', String(limit))
+    params.append('offset', String(offset))
 
     const response = await spotifyApi.get(`/artists/${artistId}/albums?${params.toString()}`)
     return response.data

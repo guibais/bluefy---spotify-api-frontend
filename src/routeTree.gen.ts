@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as CallbackRouteImport } from './routes/callback'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
 import { Route as ArtistArtistIdRouteImport } from './routes/artist.$artistId'
 import { Route as AlbumAlbumIdRouteImport } from './routes/album.$albumId'
 
+const CallbackRoute = CallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const AlbumAlbumIdRoute = AlbumAlbumIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/callback': typeof CallbackRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/callback': typeof CallbackRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -50,6 +58,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/callback': typeof CallbackRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -58,14 +67,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/callback'
     | '/album/$albumId'
     | '/artist/$artistId'
     | '/demo/tanstack-query'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/album/$albumId' | '/artist/$artistId' | '/demo/tanstack-query'
+  to:
+    | '/'
+    | '/callback'
+    | '/album/$albumId'
+    | '/artist/$artistId'
+    | '/demo/tanstack-query'
   id:
     | '__root__'
     | '/'
+    | '/callback'
     | '/album/$albumId'
     | '/artist/$artistId'
     | '/demo/tanstack-query'
@@ -73,6 +89,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CallbackRoute: typeof CallbackRoute
   AlbumAlbumIdRoute: typeof AlbumAlbumIdRoute
   ArtistArtistIdRoute: typeof ArtistArtistIdRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
@@ -80,6 +97,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/callback': {
+      id: '/callback'
+      path: '/callback'
+      fullPath: '/callback'
+      preLoaderRoute: typeof CallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -113,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CallbackRoute: CallbackRoute,
   AlbumAlbumIdRoute: AlbumAlbumIdRoute,
   ArtistArtistIdRoute: ArtistArtistIdRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
