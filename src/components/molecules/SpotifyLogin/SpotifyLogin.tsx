@@ -19,13 +19,13 @@ export const SpotifyLogin = ({ onLogin }: SpotifyLoginProps) => {
   return (
     <div className="max-w-md mx-auto text-center">
       <div className="card p-8">
-        <Music className="w-16 h-16 mx-auto mb-6" style={{ color: 'var(--spotify-green)' }} />
+        <Music className="w-16 h-16 mx-auto mb-6 text-blue-500" />
         
-        <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--spotify-white)' }}>
+        <h2 className="text-2xl font-bold mb-4 text-spotify-white">
           Conectar ao Spotify
         </h2>
         
-        <p className="mb-6" style={{ color: 'var(--spotify-light-gray)' }}>
+        <p className="mb-6 text-spotify-light-gray">
           Para acessar suas músicas e artistas favoritos, conecte-se com sua conta do Spotify.
         </p>
 
@@ -39,7 +39,7 @@ export const SpotifyLogin = ({ onLogin }: SpotifyLoginProps) => {
           Conectar com Spotify
         </Button>
 
-        <p className="text-sm mt-4" style={{ color: 'var(--spotify-light-gray)' }}>
+        <p className="text-sm mt-4 text-spotify-light-gray">
           Você será redirecionado para o Spotify para autorizar o acesso
         </p>
       </div>

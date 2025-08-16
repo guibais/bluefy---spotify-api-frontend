@@ -1,46 +1,32 @@
 import { Play, Pause } from 'lucide-react'
 import { useAudioPlayer } from '../../../hooks/useAudioPlayer'
 
-type Track = {
-  id: string
-  name: string
-  artists: Array<{ name: string }>
-  preview_url?: string | null
-  duration_ms: number
-}
-
 type PlayButtonProps = {
-  track: Track
+  playlistId?: string
   size?: 'sm' | 'md' | 'lg'
   variant?: 'primary' | 'secondary' | 'ghost'
   className?: string
 }
 
 export const PlayButton = ({ 
-  track, 
+  playlistId,
   size = 'md', 
   variant = 'primary',
   className = '' 
 }: PlayButtonProps) => {
-  const { currentTrack, isPlaying, playTrack, togglePlayPause, hasPreview } = useAudioPlayer()
+  const { currentPlaylistId, isPlaying, playPlaylist, togglePlayPause } = useAudioPlayer()
 
-  const isCurrentTrack = currentTrack?.id === track.id
-  const isCurrentlyPlaying = isCurrentTrack && isPlaying
+  const targetPlaylistId = playlistId || null
+  const isCurrent = !!targetPlaylistId && currentPlaylistId === targetPlaylistId
+  const isCurrentlyPlaying = isCurrent && isPlaying
 
   const handleClick = () => {
-    if (isCurrentTrack) {
+    if (!targetPlaylistId) return
+    if (isCurrent) {
       togglePlayPause()
     } else {
-      playTrack(track)
+      playPlaylist(targetPlaylistId)
     }
-  }
-
-  if (!hasPreview(track)) {
-    return (
-      <div className={`inline-flex items-center justify-center rounded-full bg-purplefy-medium-gray/50 cursor-not-allowed ${getSizeClasses(size)} ${className}`}>
-        <Play className={`text-purplefy-light-gray/50 ${getIconSize(size)}`} />
-      </div>
-    )
   }
 
   const baseClasses = "inline-flex items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95"
@@ -50,7 +36,9 @@ export const PlayButton = ({
   return (
     <button
       onClick={handleClick}
-      className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className}`}
+      disabled={!targetPlaylistId}
+      className={`${baseClasses} ${variantClasses} ${sizeClasses} ${className} ${!targetPlaylistId ? 'opacity-50 cursor-not-allowed' : ''}`}
+      aria-label={isCurrentlyPlaying ? 'Pausar playlist' : 'Reproduzir playlist'}
     >
       {isCurrentlyPlaying ? (
         <Pause className={`text-purplefy-white ${getIconSize(size)}`} />

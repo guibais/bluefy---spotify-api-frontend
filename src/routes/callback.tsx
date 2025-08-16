@@ -59,10 +59,10 @@ function CallbackPage() {
         {status === 'processing' && (
           <>
             <Loading size="lg" />
-            <h1 className="text-2xl font-bold mt-6 mb-4" style={{ color: 'var(--spotify-white)' }}>
+            <h1 className="text-2xl font-bold mt-6 mb-4 text-spotify-white">
               Processando autenticação...
             </h1>
-            <p style={{ color: 'var(--spotify-light-gray)' }}>
+            <p className="text-spotify-light-gray">
               Aguarde enquanto configuramos sua conexão com o Spotify
             </p>
           </>
@@ -71,10 +71,10 @@ function CallbackPage() {
         {status === 'success' && (
           <>
             <div className="text-6xl mb-6">✅</div>
-            <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--spotify-white)' }}>
+            <h1 className="text-2xl font-bold mb-4 text-spotify-white">
               Conectado com sucesso!
             </h1>
-            <p style={{ color: 'var(--spotify-light-gray)' }}>
+            <p className="text-spotify-light-gray">
               Redirecionando para a página inicial...
             </p>
           </>
@@ -83,19 +83,16 @@ function CallbackPage() {
         {status === 'error' && (
           <>
             <div className="text-6xl mb-6">❌</div>
-            <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--spotify-white)' }}>
+            <h1 className="text-2xl font-bold mb-4 text-spotify-white">
               Erro na autenticação
             </h1>
-            <p className="mb-6" style={{ color: 'var(--spotify-light-gray)' }}>
+            <p className="mb-6 text-spotify-light-gray">
               {errorMessage}
             </p>
             <button
+              type="button"
               onClick={() => navigate({ to: '/' })}
-              className="px-6 py-2 rounded-full font-semibold transition-colors"
-              style={{ 
-                backgroundColor: 'var(--spotify-green)', 
-                color: 'var(--spotify-black)' 
-              }}
+              className="px-6 py-2 rounded-full font-semibold transition-colors bg-blue-500 hover:bg-blue-400 text-black"
             >
               Voltar ao início
             </button>

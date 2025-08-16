@@ -3,7 +3,6 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 import { Music, LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { AudioPlayer } from '@/components/molecules/AudioPlayer/AudioPlayer'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -27,24 +26,31 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         <header className="hidden md:block sticky top-0 z-50 bg-spotify-black/95 backdrop-blur-custom border-b border-spotify-medium-gray">
           <div className="container">
             <div className="flex items-center justify-between h-16">
-              <Link to="/" className="flex items-center gap-2 text-spotify-green hover:text-spotify-green-light transition-colors">
+              <Link to="/" className="flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors">
                 <Music className="w-8 h-8" />
-                <span className="text-xl font-bold">Kanastrafy</span>
+                <span className="text-xl font-bold">Bluefy</span>
               </Link>
               
               <nav className="flex items-center gap-6">
+                   <Link 
+                  to="/home" 
+                  className="text-spotify-light-gray hover:text-spotify-white transition-colors"
+                  activeProps={{ className: "text-blue-500" }}
+                >
+                  Home
+                </Link>
                 <Link 
                   to="/" 
                   className="text-spotify-light-gray hover:text-spotify-white transition-colors"
-                  activeProps={{ className: "text-spotify-green" }}
+                  activeProps={{ className: "text-blue-500" }}
                 >
-                  Artistas
+                  Buscar
                 </Link>
                 {isAuthenticated && (
                   <Link 
                     to="/profile" 
                     className="text-spotify-light-gray hover:text-spotify-white transition-colors"
-                    activeProps={{ className: "text-spotify-green" }}
+                    activeProps={{ className: "text-blue-500" }}
                   >
                     Perfil
                   </Link>
@@ -52,6 +58,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 
                 {isAuthenticated && (
                   <button
+                    type="button"
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-spotify-light-gray hover:text-spotify-white transition-colors"
                   >
@@ -67,7 +74,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <main className="min-h-screen bg-spotify-black">
         <Outlet />
       </main>
-      <AudioPlayer />
         <TanstackDevtools
           config={{
             position: 'bottom-left',

@@ -16,7 +16,7 @@ export const Loading = ({ size = 'md', className }: LoadingProps) => {
     <div className={clsx('flex items-center justify-center', className)}>
       <svg
         className={clsx(
-          'animate-spin text-spotify-green',
+          'animate-spin text-blue-500',
           sizeClasses[size]
         )}
         xmlns="http://www.w3.org/2000/svg"

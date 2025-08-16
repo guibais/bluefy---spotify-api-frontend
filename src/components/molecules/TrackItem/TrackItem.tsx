@@ -1,5 +1,4 @@
 import { Image } from '@/components/atoms'
-import { PlayButton } from '../../atoms/PlayButton/PlayButton'
 import type { SpotifyTrack } from '@/types'
 import { Clock, ExternalLink } from 'lucide-react'
 
@@ -24,23 +23,9 @@ export const TrackItem = ({ track, index, showAlbum = false, className }: TrackI
     <div className={`flex items-center gap-4 p-3 rounded-lg hover:bg-purplefy-medium-gray/50 transition-all duration-200 group ${className || ''}`}>
       {index !== undefined && (
         <div className="w-8 flex items-center justify-center">
-          <span className="hidden md:inline text-purplefy-light-gray text-sm group-hover:hidden">
+          <span className="text-purplefy-light-gray text-sm">
             {index + 1}
           </span>
-          <div className="hidden md:block md:group-hover:block">
-            <PlayButton 
-              track={track} 
-              size="sm" 
-              variant="ghost"
-            />
-          </div>
-          <div className="md:hidden">
-            <PlayButton 
-              track={track} 
-              size="sm" 
-              variant="primary"
-            />
-          </div>
         </div>
       )}
 

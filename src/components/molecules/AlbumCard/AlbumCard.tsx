@@ -28,7 +28,7 @@ export const AlbumCard = ({ album, className }: AlbumCardProps) => {
       </div>
       
       <div className="space-y-2">
-        <h3 className="font-semibold text-spotify-white text-base truncate group-hover:text-spotify-green transition-colors">
+        <h3 className="font-semibold text-spotify-white text-base truncate group-hover:text-blue-400 transition-colors">
           {album.name}
         </h3>
         

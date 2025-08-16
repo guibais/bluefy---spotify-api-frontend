@@ -15,6 +15,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
     <Link
       to="/artist/$artistId"
       params={{ artistId: artist.id }}
+      search={{ albumPage: 1 }}
       className={`card group ${className || ''}`}
     >
       <div className="relative">
@@ -27,7 +28,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
       </div>
       
       <div className="space-y-2">
-        <h3 className="font-semibold text-spotify-white text-lg truncate group-hover:text-spotify-green transition-colors">
+        <h3 className="font-semibold text-spotify-white text-lg truncate group-hover:text-blue-400 transition-colors">
           {artist.name}
         </h3>
         
@@ -39,7 +40,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
         <div className="flex items-center gap-1">
           <div className="flex-1 bg-spotify-dark-gray rounded-full h-1">
             <div 
-              className="bg-spotify-green h-1 rounded-full transition-all duration-300"
+              className="bg-blue-500 h-1 rounded-full transition-all duration-300"
               style={{ width: `${artist.popularity}%` }}
             />
           </div>
