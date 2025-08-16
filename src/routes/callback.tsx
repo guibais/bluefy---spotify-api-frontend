@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Loading } from '@/components/atoms'
 import { spotifyAuth } from '@/services/spotifyAuth'
 import { z } from 'zod'
@@ -20,8 +20,11 @@ function CallbackPage() {
   const search = Route.useSearch()
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing')
   const [errorMessage, setErrorMessage] = useState('')
+  const handledRef = useRef(false)
 
   useEffect(() => {
+    if (handledRef.current) return
+    handledRef.current = true
     const handleCallback = async () => {
       try {
         const { code, error } = search
