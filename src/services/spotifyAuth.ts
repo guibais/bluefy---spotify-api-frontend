@@ -24,7 +24,7 @@ const base64encode = (input: ArrayBuffer): string => {
 }
 
 export const spotifyAuth = {
-  async redirectToSpotifyAuth(): Promise<void> {
+  async redirectToSpotifyAuth(state?: string): Promise<void> {
     const codeVerifier = generateRandomString(64)
     const hashed = await sha256(codeVerifier)
     const codeChallenge = base64encode(hashed)
@@ -32,7 +32,7 @@ export const spotifyAuth = {
     localStorage.setItem('code_verifier', codeVerifier)
 
     const authUrl = new URL('https://accounts.spotify.com/authorize')
-    const params = {
+    const params: Record<string, string> = {
       response_type: 'code',
       client_id: CLIENT_ID,
       scope: SCOPE,
@@ -40,6 +40,7 @@ export const spotifyAuth = {
       code_challenge: codeChallenge,
       redirect_uri: REDIRECT_URI,
     }
+    if (state) params.state = state
 
     authUrl.search = new URLSearchParams(params).toString()
     window.location.href = authUrl.toString()

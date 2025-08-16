@@ -4,12 +4,13 @@ import { Music, LogIn } from 'lucide-react'
 
 type SpotifyLoginProps = {
   onLogin?: () => void
+  state?: string
 }
 
-export const SpotifyLogin = ({ onLogin }: SpotifyLoginProps) => {
+export const SpotifyLogin = ({ onLogin, state }: SpotifyLoginProps) => {
   const handleLogin = async () => {
     try {
-      await spotifyAuth.redirectToSpotifyAuth()
+      await spotifyAuth.redirectToSpotifyAuth(state)
       onLogin?.()
     } catch (error) {
       console.error('Erro ao iniciar login:', error)

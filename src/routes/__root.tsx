@@ -1,4 +1,4 @@
-import { Outlet, createRootRouteWithContext, Link } from '@tanstack/react-router'
+import { Outlet, createRootRouteWithContext, Link, Navigate, useLocation } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 import { Music, LogOut } from 'lucide-react'
@@ -15,6 +15,20 @@ type MyRouterContext = {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => {
     const { isAuthenticated, clearTokens } = useAuth()
+    const location = useLocation()
+    const path = location.pathname
+    if (!isAuthenticated && path !== '/login' && path !== '/callback') {
+      const searchStr = typeof window !== 'undefined' ? window.location.search : ''
+      return (
+        <Navigate
+          to="/login"
+          search={{ from: `${path}${searchStr}` }}
+        />
+      )
+    }
+    if (isAuthenticated && path === '/login') {
+      return <Navigate to="/home" />
+    }
     
     const handleLogout = () => {
       clearTokens()

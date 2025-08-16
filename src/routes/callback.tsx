@@ -40,9 +40,9 @@ function CallbackPage() {
 
         await spotifyAuth.getToken(code)
         setStatus('success')
-        
+        const to = search.state && search.state.length > 0 ? search.state : '/'
         setTimeout(() => {
-          navigate({ to: '/' })
+          navigate({ to })
         }, 2000)
       } catch (error) {
         setStatus('error')
