@@ -101,7 +101,19 @@ function AlbumPage() {
             </h1>
 
             <p className="text-xl text-purplefy-light-gray mb-6">
-              por {album.artists.map(artist => artist.name).join(', ')}
+              por {album.artists.map((artist, idx) => (
+                <span key={artist.id}>
+                  <Link
+                    to="/artist/$artistId"
+                    params={{ artistId: artist.id }}
+                    search={{ albumPage: 1 }}
+                    className="hover:text-purplefy-white underline-offset-2 hover:underline"
+                  >
+                    {artist.name}
+                  </Link>
+                  {idx < album.artists.length - 1 ? ', ' : ''}
+                </span>
+              ))}
             </p>
 
             <div className="flex items-center gap-6 mb-6 text-purplefy-light-gray">
@@ -154,7 +166,19 @@ function AlbumPage() {
             </h1>
             
             <p className="text-purplefy-light-gray text-sm mb-4">
-              por {album.artists.map(artist => artist.name).join(', ')}
+              por {album.artists.map((artist, idx) => (
+                <span key={artist.id}>
+                  <Link
+                    to="/artist/$artistId"
+                    params={{ artistId: artist.id }}
+                    search={{ albumPage: 1 }}
+                    className="hover:text-purplefy-white underline-offset-2 hover:underline"
+                  >
+                    {artist.name}
+                  </Link>
+                  {idx < album.artists.length - 1 ? ', ' : ''}
+                </span>
+              ))}
             </p>
 
             <div className="flex items-center gap-4 mb-4 text-purplefy-light-gray text-sm">
