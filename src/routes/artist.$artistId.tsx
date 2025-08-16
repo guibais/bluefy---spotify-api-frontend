@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router'
 import { Button, Image } from '@/components/atoms'
 import { AlbumGrid, TrackList } from '@/components/organisms'
 import { useArtist, useArtistTopTracks, useArtistAlbums } from '@/hooks/useSpotify'
+import { useDebounce } from '@/hooks/useDebounce'
 
 type ArtistSearchParams = {
   albumFilter?: string
@@ -29,6 +30,7 @@ function ArtistPage() {
   const { data: topTracks, isLoading: tracksLoading } = useArtistTopTracks(artistId)
 
   const albumLimit = 20
+  const debouncedAlbumFilter = useDebounce(search.albumFilter, 500)
 
   const {
     data: albumsData,
@@ -36,7 +38,7 @@ function ArtistPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useArtistAlbums(artistId, albumLimit)
+  } = useArtistAlbums(artistId, albumLimit, debouncedAlbumFilter)
 
   const albums = albumsData?.pages.flatMap(page => page.items) || []
 

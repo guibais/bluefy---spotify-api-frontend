@@ -60,7 +60,8 @@ export const spotifyService = {
   getArtistAlbums: async (
     artistId: string, 
     offset: number = 0,
-    limit: number = 20
+    limit: number = 20,
+    albumFilter?: string
   ): Promise<SpotifySearchResponse<SpotifyAlbum>> => {
     const params = new URLSearchParams()
     params.append('include_groups', 'album,single')
@@ -69,7 +70,19 @@ export const spotifyService = {
     params.append('offset', String(offset))
 
     const response = await spotifyApi.get(`/artists/${artistId}/albums?${params.toString()}`)
-    return response.data
+    let albums = response.data
+    
+    if (albumFilter && albumFilter.trim()) {
+      const filterLower = albumFilter.toLowerCase().trim()
+      albums = {
+        ...albums,
+        items: albums.items.filter((album: SpotifyAlbum) => 
+          album.name.toLowerCase().includes(filterLower)
+        )
+      }
+    }
+    
+    return albums
   },
 
   getAlbum: async (albumId: string): Promise<SpotifyAlbum> => {

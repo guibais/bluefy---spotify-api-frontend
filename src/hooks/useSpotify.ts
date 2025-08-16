@@ -54,13 +54,13 @@ export const useArtistTopTracks = (artistId: string) => {
   })
 }
 
-export const useArtistAlbums = (artistId: string, limit: number = 20) => {
+export const useArtistAlbums = (artistId: string, limit: number = 20, albumFilter?: string) => {
   const { isAuthenticated } = useAuth()
   
   return useInfiniteQuery({
-    queryKey: ['artistAlbums', artistId, limit],
+    queryKey: ['artistAlbums', artistId, limit, albumFilter],
     queryFn: ({ pageParam = 0 }: { pageParam?: number }) => 
-      spotifyService.getArtistAlbums(artistId, pageParam * limit, limit),
+      spotifyService.getArtistAlbums(artistId, pageParam * limit, limit, albumFilter),
     initialPageParam: 0,
     enabled: !!artistId && isAuthenticated,
     staleTime: 10 * 60 * 1000,
