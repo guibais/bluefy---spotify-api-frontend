@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --port 9091",
     "start": "vite --port 9091",
-    "build": "vite build && tsc",
+    "build": "ROLLUP_SKIP_NODEJS_NATIVE=true vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",
     "format": "biome format",
