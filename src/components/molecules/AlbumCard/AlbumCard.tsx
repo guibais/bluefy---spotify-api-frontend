@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Image } from '@/components/atoms'
 import type { SpotifyAlbum } from '@/types'
 import { Calendar, Disc } from 'lucide-react'
+import * as m from '@/paraglide/messages.js'
 
 type AlbumCardProps = {
   album: SpotifyAlbum
@@ -44,7 +45,7 @@ export const AlbumCard = ({ album, className }: AlbumCardProps) => {
           
           <div className="flex items-center gap-1">
             <Disc className="w-3 h-3" />
-            <span>{album.total_tracks} faixas</span>
+            <span>{m.tracks_count({ count: album.total_tracks })}</span>
           </div>
         </div>
         

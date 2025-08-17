@@ -1,6 +1,7 @@
 import { Button } from '@/components/atoms'
 import { type ButtonHTMLAttributes } from 'react'
 import { useRouter } from '@tanstack/react-router'
+import * as m from '@/paraglide/messages.js'
 
 type BackButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   fallbackTo?: '/home' | '/profile' | '/search' | '/login'
@@ -23,7 +24,7 @@ export const BackButton = ({ fallbackTo = '/home', children, variant = 'primary'
 
   return (
     <Button onClick={handleClick} variant={variant} size={size} loading={loading} fullWidth={fullWidth} {...props}>
-      {children || 'Voltar'}
+      {children || m.back_label()}
     </Button>
   )
 }

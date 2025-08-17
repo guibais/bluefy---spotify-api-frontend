@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ExternalLink, User } from 'lucide-react'
+import { User } from 'lucide-react'
 import { usePlaylist, usePlaylistTracks } from '@/hooks/useSpotify'
 import { TrackList } from '@/components/organisms/TrackList/TrackList'
-import { Button } from '@/components/atoms/Button/Button'
 import { BackButton, DetailTemplate, ErrorState } from '@/components'
 import { Image } from '@/components/atoms/Image/Image'
+import { OpenInSpotifyButton } from '@/components/atoms'
+import * as m from '@/paraglide/messages.js'
 
 export const Route = createFileRoute('/playlist/$playlistId')({
   component: PlaylistPage,
@@ -37,16 +38,11 @@ function PlaylistHeader({
               {ownerName || '-'}
             </span>
             <span>•</span>
-            <span>{followers?.toLocaleString('pt-BR') ?? '-'} seguidores</span>
+            <span>{followers?.toLocaleString() ?? '-'} {m.followers_label()}</span>
           </div>
         </div>
       </div>
-      {externalUrl && (
-        <Button onClick={() => window.open(externalUrl, '_blank')} variant="secondary" className="inline-flex items-center gap-2">
-          <ExternalLink className="w-4 h-4" />
-          Abrir no Spotify
-        </Button>
-      )}
+      {externalUrl && <OpenInSpotifyButton url={externalUrl} />}
     </div>
   )
 }
@@ -61,9 +57,9 @@ function PlaylistPage() {
     return (
       <div className="container py-8">
         <ErrorState 
-          title="Erro ao carregar playlist"
+          title={m.error_playlist_load_title()}
           message={(playlistError as Error).message}
-          action={<BackButton fallbackTo="/profile" variant="primary">Voltar</BackButton>}
+          action={<BackButton fallbackTo="/profile" variant="primary">{m.back_label()}</BackButton>}
           size="lg"
         />
       </div>
@@ -72,7 +68,7 @@ function PlaylistPage() {
 
   if (playlistLoading) {
     return (
-      <DetailTemplate title="Carregando..." backTo="/profile">
+      <DetailTemplate title={m.loading()} backTo="/profile">
         <div className="flex items-center gap-6 mb-8">
           <div className="skeleton w-24 h-24 rounded-lg" />
           <div className="flex-1 space-y-3">
@@ -81,7 +77,7 @@ function PlaylistPage() {
           </div>
         </div>
 
-        <TrackList tracks={[]} loading title="Faixas da Playlist" />
+        <TrackList tracks={[]} loading title={m.playlist_tracks_title()} />
       </DetailTemplate>
     )
   }
@@ -104,16 +100,8 @@ function PlaylistPage() {
           externalUrl={playlist.external_urls?.spotify}
         />
       }
-      actions={
-        playlist.external_urls?.spotify ? (
-          <Button onClick={() => window.open(playlist.external_urls.spotify, '_blank')} variant="secondary" className="inline-flex items-center gap-2">
-            <ExternalLink className="w-4 h-4" />
-            Abrir no Spotify
-          </Button>
-        ) : null
-      }
     >
-      <TrackList tracks={tracks} loading={tracksLoading} title="Faixas da Playlist" />
+      <TrackList tracks={tracks} loading={tracksLoading} title={m.playlist_tracks_title()} />
     </DetailTemplate>
   )
 }

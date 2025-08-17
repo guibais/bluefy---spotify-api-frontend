@@ -13,6 +13,8 @@ import reportWebVitals from './reportWebVitals.ts'
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
+const isEn = typeof window !== 'undefined' && window.location.pathname.startsWith('/en')
+const basepath = isEn ? '/en' : '/'
 const router = createRouter({
   routeTree,
   context: {
@@ -22,6 +24,7 @@ const router = createRouter({
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
+  basepath,
 })
 
 // Register the router instance for type safety

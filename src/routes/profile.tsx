@@ -1,16 +1,32 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { ExternalLink } from 'lucide-react'
 import { useMe, useMyPlaylists } from '@/hooks/useSpotify'
 import type { SpotifyPlaylist } from '@/types'
 import { MobileLayout } from '@/components/organisms/MobileLayout/MobileLayout'
 import { Image } from '@/components/atoms/Image/Image'
-import { Button } from '@/components/atoms/Button/Button'
+import { OpenInSpotifyButton } from '@/components/atoms'
+import * as m from '@/paraglide/messages.js'
 
 export const Route = createFileRoute('/profile')({
   component: ProfilePage,
 })
 
 function ProfilePage() {
+  const getLocaleFromPath = () => (window.location.pathname.startsWith('/en') ? 'en' : 'pt-BR')
+  const setLocale = (locale: 'pt-BR' | 'en') => {
+    const { pathname, search, hash } = window.location
+    const isEn = pathname.startsWith('/en')
+    if (locale === 'en' && !isEn) {
+      const next = `/en${pathname}${search}${hash}`
+      window.location.assign(next)
+      return
+    }
+    if (locale === 'pt-BR' && isEn) {
+      const next = `${pathname.replace(/^\/en/, '')}${search}${hash}`
+      window.location.assign(next)
+      return
+    }
+  }
+
   const { data: me, isLoading: meLoading, error: meError } = useMe()
   const {
     data: playlistsData,
@@ -23,7 +39,7 @@ function ProfilePage() {
       <div className="container py-8">
         <div className="text-center py-12">
           <div className="text-6xl mb-4">⚠️</div>
-          <h3 className="text-xl font-semibold text-purplefy-white mb-2">Erro ao carregar perfil</h3>
+          <h3 className="text-xl font-semibold text-purplefy-white mb-2">{m.error_profile_load_title()}</h3>
           <p className="text-purplefy-light-gray">{meError.message}</p>
         </div>
       </div>
@@ -33,6 +49,20 @@ function ProfilePage() {
   return (
     <>
       <div className="hidden md:block container py-8">
+        <div className="flex items-center justify-end mb-6 gap-3">
+          <label htmlFor="lang-select" className="text-sm text-purplefy-light-gray">
+            {m.language_label()}
+          </label>
+          <select
+            id="lang-select"
+            className="input-field w-48"
+            defaultValue={getLocaleFromPath()}
+            onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
+          >
+            <option value="pt-BR">{m.language_portuguese()}</option>
+            <option value="en">{m.language_english()}</option>
+          </select>
+        </div>
         {meLoading ? (
           <div className="flex items-center gap-6 mb-10">
             <div className="skeleton w-24 h-24 rounded-full" />
@@ -53,26 +83,21 @@ function ProfilePage() {
                   <p className="text-purplefy-light-gray">{me.email || me.country}</p>
                   <div className="mt-2 grid grid-cols-3 gap-4 text-sm text-purplefy-light-gray">
                     <div>
-                      <span className="block text-xs uppercase tracking-wide">Seguidores</span>
+                      <span className="block text-xs uppercase tracking-wide">{m.followers_label()}</span>
                       <span className="text-purplefy-white">{me.followers?.total?.toLocaleString('pt-BR') ?? '-'}</span>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase tracking-wide">País</span>
+                      <span className="block text-xs uppercase tracking-wide">{m.country_label()}</span>
                       <span className="text-purplefy-white">{me.country ?? '-'}</span>
                     </div>
                     <div>
-                      <span className="block text-xs uppercase tracking-wide">Plano</span>
+                      <span className="block text-xs uppercase tracking-wide">{m.plan_label()}</span>
                       <span className="text-purplefy-white">{me.product ?? '-'}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              {me.external_urls?.spotify && (
-                <Button onClick={() => window.open(me.external_urls!.spotify, '_blank')} variant="secondary" className="inline-flex items-center gap-2">
-                  <ExternalLink className="w-4 h-4" />
-                  Abrir no Spotify
-                </Button>
-              )}
+              {me.external_urls?.spotify && <OpenInSpotifyButton url={me.external_urls!.spotify} />}
             </div>
           )
         )}
@@ -80,7 +105,7 @@ function ProfilePage() {
         
 
         <section>
-          <h2 className="text-xl font-semibold text-purplefy-white mb-4">Minhas playlists</h2>
+          <h2 className="text-xl font-semibold text-purplefy-white mb-4">{m.my_playlists()}</h2>
           {playlistsLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -98,17 +123,14 @@ function ProfilePage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <h3 className="text-sm font-medium text-spotify-white truncate">{pl.name}</h3>
-                      <p className="text-xs text-spotify-light-gray truncate">{pl.tracks?.total ?? 0} músicas</p>
+                      <p className="text-xs text-spotify-light-gray truncate">{pl.tracks?.total ?? 0} {m.tracks_suffix()}</p>
                     </div>
                     {pl.external_urls?.spotify && (
-                      <button
-                        type="button"
-                        onClick={(e) => { e.preventDefault(); window.open(pl.external_urls!.spotify, '_blank') }}
-                        className="text-blue-500 hover:text-blue-400"
-                        aria-label={`Abrir playlist ${pl.name} no Spotify`}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </button>
+                      <OpenInSpotifyButton
+                        url={pl.external_urls!.spotify}
+                        iconOnly
+                        ariaLabel={`${m.open_in_spotify()} - ${pl.name}`}
+                      />
                     )}
                   </div>
                 </Link>
@@ -118,8 +140,22 @@ function ProfilePage() {
         </section>
       </div>
 
-      <MobileLayout title="Perfil" showTabs={false}>
+      <MobileLayout title={m.profile_title()} showTabs={false}>
         <div className="px-4 py-4">
+          <div className="flex items-center justify-end mb-4 gap-2">
+            <label htmlFor="lang-select-m" className="text-xs text-purplefy-light-gray">
+              {m.language_label()}
+            </label>
+            <select
+              id="lang-select-m"
+              className="input-field w-auto text-sm"
+              defaultValue={getLocaleFromPath()}
+              onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
+            >
+              <option value="pt-BR">{m.language_portuguese()}</option>
+              <option value="en">{m.language_english()}</option>
+            </select>
+          </div>
           {meLoading ? (
             <div className="flex items-center gap-4 mb-6">
               <div className="skeleton w-16 h-16 rounded-full" />
@@ -139,15 +175,15 @@ function ProfilePage() {
                   <p className="text-purplefy-light-gray text-sm">{me.email || me.country}</p>
                   <div className="mt-2 grid grid-cols-3 gap-3 text-[11px] text-purplefy-light-gray">
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wide">Seg.</span>
+                      <span className="block text-[10px] uppercase tracking-wide">{m.followers_label()}</span>
                       <span className="text-spotify-white">{me.followers?.total?.toLocaleString('pt-BR') ?? '-'}</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wide">País</span>
+                      <span className="block text-[10px] uppercase tracking-wide">{m.country_label()}</span>
                       <span className="text-spotify-white">{me.country ?? '-'}</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wide">Plano</span>
+                      <span className="block text-[10px] uppercase tracking-wide">{m.plan_label()}</span>
                       <span className="text-spotify-white">{me.product ?? '-'}</span>
                     </div>
                   </div>
@@ -159,7 +195,7 @@ function ProfilePage() {
           
 
           <div>
-            <h2 className="text-lg font-semibold text-spotify-white mb-3">Playlists</h2>
+            <h2 className="text-lg font-semibold text-spotify-white mb-3">{m.playlists_title()}</h2>
             {playlistsLoading ? (
               <div className="grid grid-cols-2 gap-3">
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -177,17 +213,14 @@ function ProfilePage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <h3 className="text-xs font-medium text-spotify-white truncate">{pl.name}</h3>
-                        <p className="text-[10px] text-spotify-light-gray truncate">{pl.tracks?.total ?? 0} músicas</p>
+                        <p className="text-[10px] text-spotify-light-gray truncate">{pl.tracks?.total ?? 0} {m.tracks_suffix()}</p>
                       </div>
                       {pl.external_urls?.spotify && (
-                        <button
-                          type="button"
-                          onClick={(e) => { e.preventDefault(); window.open(pl.external_urls!.spotify, '_blank') }}
-                          className="text-blue-500 hover:text-blue-400"
-                          aria-label={`Abrir playlist ${pl.name} no Spotify`}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </button>
+                        <OpenInSpotifyButton
+                          url={pl.external_urls!.spotify}
+                          iconOnly
+                          ariaLabel={`${m.open_in_spotify()} - ${pl.name}`}
+                        />
                       )}
                     </div>
                   </Link>

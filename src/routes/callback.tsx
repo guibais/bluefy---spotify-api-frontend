@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Loading } from '@/components/atoms'
 import { spotifyAuth } from '@/services/spotifyAuth'
 import { z } from 'zod'
+import * as m from '@/paraglide/messages.js'
 
 const callbackSearchSchema = z.object({
   code: z.string().optional(),
@@ -32,13 +33,13 @@ function CallbackPage() {
 
         if (error) {
           setStatus('error')
-          setErrorMessage(`Erro na autorização: ${error}`)
+          setErrorMessage(`${m.auth_error_title()}: ${error}`)
           return
         }
 
         if (!code) {
           setStatus('error')
-          setErrorMessage('Código de autorização não encontrado')
+          setErrorMessage(m.auth_error_title())
           return
         }
 
@@ -50,7 +51,7 @@ function CallbackPage() {
         }, 2000)
       } catch (error) {
         setStatus('error')
-        setErrorMessage(error instanceof Error ? error.message : 'Erro desconhecido')
+        setErrorMessage(error instanceof Error ? error.message : m.error_title())
       }
     }
 
@@ -64,10 +65,10 @@ function CallbackPage() {
           <>
             <Loading size="lg" />
             <h1 className="text-2xl font-bold mt-6 mb-4 text-spotify-white">
-              Processando autenticação...
+              {m.auth_processing_title()}
             </h1>
             <p className="text-spotify-light-gray">
-              Aguarde enquanto configuramos sua conexão com o Spotify
+              {m.auth_processing_message()}
             </p>
           </>
         )}
@@ -76,10 +77,10 @@ function CallbackPage() {
           <>
             <div className="text-6xl mb-6">✅</div>
             <h1 className="text-2xl font-bold mb-4 text-spotify-white">
-              Conectado com sucesso!
+              {m.auth_success_title()}
             </h1>
             <p className="text-spotify-light-gray">
-              Redirecionando para a página inicial...
+              {m.auth_success_message()}
             </p>
           </>
         )}
@@ -88,13 +89,13 @@ function CallbackPage() {
           <>
             <div className="text-6xl mb-6">❌</div>
             <h1 className="text-2xl font-bold mb-4 text-spotify-white">
-              Erro na autenticação
+              {m.auth_error_title()}
             </h1>
             <p className="mb-6 text-spotify-light-gray">
               {errorMessage}
             </p>
             <BackButton fallbackTo="/home" variant="primary">
-              Voltar ao início
+              {m.back_to_home()}
             </BackButton>
           </>
         )}

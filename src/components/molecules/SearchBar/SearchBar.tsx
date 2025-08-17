@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Input } from '@/components/atoms'
 import { useDebounce } from '@/hooks/useDebounce'
+import * as m from '@/paraglide/messages.js'
 
 type SearchBarProps = {
   placeholder?: string
@@ -10,7 +11,7 @@ type SearchBarProps = {
 }
 
 export const SearchBar = ({ 
-  placeholder = "Buscar artistas...", 
+  placeholder = m.search_placeholder_artists(), 
   onSearch, 
   initialValue = "",
   className 

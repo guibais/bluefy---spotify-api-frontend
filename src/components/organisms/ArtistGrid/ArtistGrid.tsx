@@ -1,5 +1,6 @@
 import { ArtistCard } from '@/components/molecules'
 import type { SpotifyArtist } from '@/types'
+import * as m from '@/paraglide/messages.js'
 
 type ArtistGridProps = {
   artists: SpotifyArtist[]
@@ -29,10 +30,10 @@ export const ArtistGrid = ({ artists, loading = false, className }: ArtistGridPr
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🎵</div>
         <h3 className="text-xl font-semibold text-spotify-white mb-2">
-          Nenhum artista encontrado
+          {m.artists_empty_title()}
         </h3>
         <p className="text-spotify-light-gray">
-          Tente buscar por outro nome ou termo
+          {m.artists_empty_suggestion()}
         </p>
       </div>
     )

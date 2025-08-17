@@ -1,5 +1,6 @@
 import { Home, Search, User } from 'lucide-react'
 import { Link, useLocation } from '@tanstack/react-router'
+import * as m from '@/paraglide/messages.js'
 
 type Tab = {
   id: string
@@ -11,19 +12,19 @@ type Tab = {
 const tabs: Tab[] = [
   {
     id: 'home',
-    label: 'Início',
+    label: m.nav_home(),
     icon: Home,
     to: '/home'
   },
   {
     id: 'search',
-    label: 'Buscar',
+    label: m.nav_search(),
     icon: Search,
     to: '/search'
   },
   {
     id: 'profile',
-    label: 'Perfil',
+    label: m.nav_profile(),
     icon: User,
     to: '/profile'
   }

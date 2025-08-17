@@ -6,7 +6,7 @@ import { TrackList } from '../components/organisms/TrackList/TrackList'
 import { Button } from '../components/atoms/Button/Button'
 import { Image } from '../components/atoms/Image/Image'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
- 
+import * as m from '@/paraglide/messages.js'
 
 export const Route = createFileRoute('/album/$albumId')({
   component: AlbumPage,
@@ -22,9 +22,9 @@ function AlbumPage() {
     return (
       <div className="container py-8">
         <ErrorState 
-          title="Erro ao carregar álbum"
+          title={m.error_album_load_title()}
           message={albumError.message}
-          action={<BackButton fallbackTo="/home" variant="primary">Voltar para busca</BackButton>}
+          action={<BackButton fallbackTo="/home" variant="primary">{m.back_to_search()}</BackButton>}
           size="lg"
         />
       </div>
@@ -47,7 +47,7 @@ function AlbumPage() {
           </div>
         </div>
 
-        <MobileLayout title="Carregando..." backTo="/home">
+        <MobileLayout title={m.loading()} backTo="/home">
           <div className="px-4 py-4">
             <div className="flex flex-col gap-4 mb-6">
               <div className="skeleton w-full aspect-square rounded-xl" />
@@ -74,7 +74,7 @@ function AlbumPage() {
       <div className="hidden md:block container py-8">
         <Link to="/home" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
-          Voltar para busca
+          {m.back_to_search()}
         </Link>
 
         <div className="flex flex-col md:flex-row gap-8 mb-8">
@@ -96,7 +96,7 @@ function AlbumPage() {
             </h1>
 
             <p className="text-xl text-purplefy-light-gray mb-6">
-              por {album.artists.map((artist, idx) => (
+              {m.by()} {album.artists.map((artist, idx) => (
                 <span key={artist.id}>
                   <Link
                     to="/artist/$artistId"
@@ -119,7 +119,7 @@ function AlbumPage() {
 
               <div className="flex items-center gap-2">
                 <Disc className="w-5 h-5" />
-                <span>{album.total_tracks} faixas</span>
+                <span>{m.tracks_count({ count: album.total_tracks })}</span>
               </div>
             </div>
 
@@ -129,7 +129,7 @@ function AlbumPage() {
               className="inline-flex items-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />
-              Abrir no Spotify
+              {m.open_in_spotify()}
             </Button>
           </div>
         </div>
@@ -137,7 +137,7 @@ function AlbumPage() {
         <TrackList
           tracks={tracks}
           loading={tracksLoading}
-          title="Faixas do Álbum"
+          title={m.album_tracks_title()}
         />
       </div>
 
@@ -161,7 +161,7 @@ function AlbumPage() {
             </h1>
             
             <p className="text-purplefy-light-gray text-sm mb-4">
-              por {album.artists.map((artist, idx) => (
+              {m.by()} {album.artists.map((artist, idx) => (
                 <span key={artist.id}>
                   <Link
                     to="/artist/$artistId"
@@ -184,7 +184,7 @@ function AlbumPage() {
 
               <div className="flex items-center gap-1">
                 <Disc className="w-4 h-4" />
-                <span>{album.total_tracks} faixas</span>
+                <span>{m.tracks_count({ count: album.total_tracks })}</span>
               </div>
             </div>
 
@@ -195,7 +195,7 @@ function AlbumPage() {
               className="inline-flex items-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />
-              Abrir no Spotify
+              {m.open_in_spotify()}
             </Button>
           </div>
 
@@ -203,7 +203,7 @@ function AlbumPage() {
           <TrackList
             tracks={tracks}
             loading={tracksLoading}
-            title=""
+            title={m.album_tracks_title()}
           />
         </div>
       </MobileLayout>

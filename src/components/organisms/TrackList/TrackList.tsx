@@ -1,5 +1,6 @@
 import { TrackItem } from '@/components/molecules'
 import type { SpotifyTrack } from '@/types'
+import * as m from '@/paraglide/messages.js'
 
 type TrackListProps = {
   tracks: SpotifyTrack[]
@@ -42,10 +43,10 @@ export const TrackList = ({
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🎶</div>
         <h3 className="text-xl font-semibold text-purplefy-white mb-2">
-          Nenhuma música encontrada
+          {m.tracks_empty_title()}
         </h3>
         <p className="text-purplefy-light-gray">
-          Não há faixas disponíveis no momento
+          {m.tracks_empty_message()}
         </p>
       </div>
     )

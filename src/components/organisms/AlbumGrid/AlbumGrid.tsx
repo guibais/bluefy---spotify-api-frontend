@@ -1,6 +1,7 @@
 import { AlbumCard } from '@/components/molecules'
 import { Button } from '@/components/atoms'
 import type { SpotifyAlbum } from '@/types'
+import * as m from '@/paraglide/messages.js'
 
 type AlbumGridProps = {
   albums: SpotifyAlbum[]
@@ -38,14 +39,14 @@ export const AlbumGrid = ({
 
   if (albums.length === 0) {
     const emptyTextMap: Record<'artist' | 'search', string> = {
-      artist: 'Este artista ainda não possui álbuns disponíveis',
-      search: 'Nenhum álbum corresponde à sua busca',
+      artist: m.albums_empty_artist(),
+      search: m.albums_empty_search(),
     }
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">💿</div>
         <h3 className="text-xl font-semibold text-spotify-white mb-2">
-          Nenhum álbum encontrado
+          {m.albums_empty_title()}
         </h3>
         <p className="text-spotify-light-gray">
           {emptyTextMap[emptyKind]}
@@ -69,7 +70,7 @@ export const AlbumGrid = ({
             loading={loadingMore}
             variant="secondary"
           >
-            {loadingMore ? 'Carregando...' : 'Carregar mais álbuns'}
+            {loadingMore ? m.loading() : m.load_more_albums()}
           </Button>
         </div>
       )}

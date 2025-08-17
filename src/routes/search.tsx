@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 import { SearchBar, ArtistGrid, GridPageTemplate, ErrorState } from '@/components'
 import { useSearchArtists } from '@/hooks/useSpotify'
 import type { SearchFilters } from '@/types'
+import * as m from '@/paraglide/messages.js'
 
 type HomeSearchParams = {
   q?: string
@@ -47,13 +48,13 @@ function Home() {
 
   return (
     <GridPageTemplate
-      title="Descubra Artistas"
-      description="Explore artistas do Spotify. Encontre suas próximas descobertas."
+      title={m.page_search_title()}
+      description={m.page_search_description()}
       showTabs={false}
       mobileShowBack={true}
       toolbar={
         <SearchBar
-          placeholder="Buscar artistas..."
+          placeholder={m.search_placeholder_artists()}
           onSearch={handleSearch}
           initialValue={search.q || ''}
         />
@@ -62,7 +63,7 @@ function Home() {
       {error && (
         <div className="py-8">
           <ErrorState
-            title="Erro ao buscar artistas"
+            title={m.error_search_artists_title()}
             message={error.message}
             size="lg"
           />
@@ -80,8 +81,8 @@ function Home() {
       {!hasSearched && !error && (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🎵</div>
-          <h3 className="text-xl font-semibold text-purplefy-white mb-2">Comece sua busca</h3>
-          <p className="text-purplefy-light-gray">Digite o nome de um artista para começar a explorar</p>
+          <h3 className="text-xl font-semibold text-purplefy-white mb-2">{m.empty_search_title()}</h3>
+          <p className="text-purplefy-light-gray">{m.empty_search_description()}</p>
         </div>
       )}
     </GridPageTemplate>

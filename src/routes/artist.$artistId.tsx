@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { BackButton, ErrorState } from '@/components'
-import { ArrowLeft, Users, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Users } from 'lucide-react'
 import { useArtist, useArtistTopTracks, useArtistAlbums, useNewReleases, useSearchAlbums } from '../hooks/useSpotify'
 import { useDebounce } from '../hooks/useDebounce'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
 import { AlbumGrid } from '../components/organisms/AlbumGrid/AlbumGrid'
-import { Button } from '../components/atoms/Button/Button'
 import { Image } from '../components/atoms/Image/Image'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
- 
+import { OpenInSpotifyButton } from '@/components/atoms'
+import * as m from '@/paraglide/messages.js'
 
 type ArtistSearchParams = {
   albumFilter?: string
@@ -62,7 +62,6 @@ function ArtistPage() {
     ? (albumsSearch?.items || [])
     : (albumsData?.pages.flatMap(page => page.items) || [])
 
-  // New releases (global)
   const { data: newReleasesData, isLoading: newReleasesLoading } = useNewReleases(12, 'BR')
   const newReleases = newReleasesData?.albums.items || []
 
@@ -85,20 +84,18 @@ function ArtistPage() {
       <>
         <div className="hidden md:block container py-8">
           <ErrorState 
-            title="Erro ao carregar artista"
+            title={m.error_artist_load_title()}
             message={artistError.message}
-            action={<BackButton fallbackTo="/home" variant="primary">Voltar para busca</BackButton>}
+            action={<BackButton fallbackTo="/home" variant="primary">{m.back_label()}</BackButton>}
             size="lg"
           />
         </div>
 
-        <MobileLayout title="Erro" backTo="/home">
+        <MobileLayout title={m.error_title()} backTo="/home">
           <div className="px-4 py-8">
             <div className="text-center">
               <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="text-lg font-semibold text-purplefy-white mb-2">
-                Erro ao carregar
-              </h3>
+              <h3 className="text-lg font-semibold text-purplefy-white mb-2">{m.error_loading_title()}</h3>
               <p className="text-purplefy-light-gray text-sm">
                 {artistError.message}
               </p>
@@ -124,7 +121,7 @@ function ArtistPage() {
           </div>
         </div>
 
-        <MobileLayout title="Carregando..." backTo="/home">
+        <MobileLayout title={m.loading()} backTo="/home">
           <div className="px-4 py-4">
             <div className="flex flex-col gap-4 mb-6">
               <div className="skeleton w-full aspect-square rounded-xl" />
@@ -149,7 +146,7 @@ function ArtistPage() {
       <div className="hidden md:block container py-8">
         <Link to="/home" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
-          Voltar para busca
+          {m.back_to_search()}
         </Link>
 
         <div className="flex flex-col md:flex-row gap-8 mb-8">
@@ -169,7 +166,7 @@ function ArtistPage() {
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-2 text-purplefy-light-gray">
                 <Users className="w-5 h-5" />
-                <span>{artist.followers.total.toLocaleString('pt-BR')} seguidores</span>
+                <span>{artist.followers.total.toLocaleString()}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -179,9 +176,7 @@ function ArtistPage() {
                     style={{ width: `${artist.popularity}%` }}
                   />
                 </div>
-                <span className="text-sm text-purplefy-light-gray">
-                  {artist.popularity}% popular
-                </span>
+                <span className="text-sm text-purplefy-light-gray">{artist.popularity}% {m.popular_label()}</span>
               </div>
             </div>
 
@@ -198,14 +193,7 @@ function ArtistPage() {
               </div>
             )}
 
-            <Button
-              onClick={() => window.open(artist.external_urls.spotify, '_blank')}
-              variant="primary"
-              className="inline-flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Abrir no Spotify
-            </Button>
+            <OpenInSpotifyButton url={artist.external_urls.spotify} variant="primary" />
           </div>
         </div>
 
@@ -223,7 +211,7 @@ function ArtistPage() {
                   : 'border-transparent text-purplefy-light-gray hover:text-purplefy-white'
               }`}
             >
-              Principais Músicas
+              {m.top_tracks_title()}
             </button>
             <button
               onClick={() =>
@@ -237,7 +225,7 @@ function ArtistPage() {
                   : 'border-transparent text-purplefy-light-gray hover:text-purplefy-white'
               }`}
             >
-              Álbuns
+              {m.albums_title()}
             </button>
           </nav>
         </div>
@@ -246,18 +234,18 @@ function ArtistPage() {
           <TrackList
             tracks={topTracks || []}
             loading={tracksLoading}
-            title="Principais Músicas"
+            title={m.top_tracks_title()}
           />
         )}
 
         {activeTab === 'albums' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-              <h2 className="text-2xl font-bold text-purplefy-white">Álbuns</h2>
+              <h2 className="text-2xl font-bold text-purplefy-white">{m.albums_title()}</h2>
               <div className="w-full sm:w-auto">
                 <input
                   type="text"
-                  placeholder="Filtrar álbuns..."
+                  placeholder={m.filter_albums_placeholder()}
                   value={search.albumFilter || ''}
                   onChange={(e) => handleAlbumFilterChange(e.target.value)}
                   className="input-field w-full sm:w-64"
@@ -274,7 +262,7 @@ function ArtistPage() {
             />
 
             <div className="pt-4">
-              <h2 className="text-2xl font-bold text-purplefy-white mb-4">Novos Lançamentos</h2>
+              <h2 className="text-2xl font-bold text-purplefy-white mb-4">{m.new_releases_title()}</h2>
               <AlbumGrid
                 albums={newReleases}
                 loading={newReleasesLoading}
@@ -334,15 +322,7 @@ function ArtistPage() {
               </div>
             )}
 
-            <Button
-              onClick={() => window.open(artist.external_urls.spotify, '_blank')}
-              variant="primary"
-              size="sm"
-              className="inline-flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Abrir no Spotify
-            </Button>
+            <OpenInSpotifyButton url={artist.external_urls.spotify} variant="primary" size="sm" />
           </div>
 
           <div className="mb-4" role="tablist" aria-label="Selecionar conteúdo do artista">
@@ -357,7 +337,7 @@ function ArtistPage() {
                   activeTab === 'tracks' ? 'text-white' : 'text-purplefy-light-gray'
                 }`}
               >
-                Músicas
+                {m.tracks_title()}
                 {activeTab === 'tracks' && (
                   <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
                 )}
@@ -372,7 +352,7 @@ function ArtistPage() {
                   activeTab === 'albums' ? 'text-white' : 'text-purplefy-light-gray'
                 }`}
               >
-                Álbuns
+                {m.albums_title()}
                 {activeTab === 'albums' && (
                   <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
                 )}
@@ -393,7 +373,7 @@ function ArtistPage() {
               <div className="mb-4">
                 <input
                   type="text"
-                  placeholder="Filtrar álbuns..."
+                  placeholder={m.filter_albums_placeholder()}
                   value={search.albumFilter || ''}
                   onChange={(e) => handleAlbumFilterChange(e.target.value)}
                   className="input-field w-full"
@@ -409,7 +389,7 @@ function ArtistPage() {
               />
 
               <div className="pt-2">
-                <h2 className="text-xl font-bold text-purplefy-white mb-3">Novos Lançamentos</h2>
+                <h2 className="text-xl font-bold text-purplefy-white mb-3">{m.new_releases_title()}</h2>
                 <AlbumGrid
                   albums={newReleases}
                   loading={newReleasesLoading}

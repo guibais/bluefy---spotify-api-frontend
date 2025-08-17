@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Image } from '@/components/atoms'
 import type { SpotifyArtist } from '@/types'
 import { Users } from 'lucide-react'
+import * as m from '@/paraglide/messages.js'
 
 type ArtistCardProps = {
   artist: SpotifyArtist
@@ -34,7 +35,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
         
         <div className="flex items-center gap-2 text-spotify-light-gray text-sm">
           <Users className="w-4 h-4" />
-          <span>{artist.followers.total.toLocaleString('pt-BR')} seguidores</span>
+          <span>{artist.followers.total.toLocaleString()} {m.followers_label()}</span>
         </div>
         
         <div className="flex items-center gap-1">
@@ -45,7 +46,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
             />
           </div>
           <span className="text-xs text-spotify-light-gray ml-2">
-            {artist.popularity}% popular
+            {artist.popularity}% {m.popular_label()}
           </span>
         </div>
         
