@@ -54,7 +54,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                   Home
                 </Link>
                 <Link 
-                  to="/" 
+                  to="/search" 
                   className="text-spotify-light-gray hover:text-spotify-white transition-colors"
                   activeProps={{ className: "text-blue-500" }}
                 >

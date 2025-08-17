@@ -9,15 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CallbackRouteImport } from './routes/callback'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlaylistPlaylistIdRouteImport } from './routes/playlist.$playlistId'
 import { Route as ArtistArtistIdRouteImport } from './routes/artist.$artistId'
 import { Route as AlbumAlbumIdRouteImport } from './routes/album.$albumId'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -38,11 +43,6 @@ const CallbackRoute = CallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PlaylistPlaylistIdRoute = PlaylistPlaylistIdRouteImport.update({
   id: '/playlist/$playlistId',
   path: '/playlist/$playlistId',
@@ -60,32 +60,32 @@ const AlbumAlbumIdRoute = AlbumAlbumIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/playlist/$playlistId': typeof PlaylistPlaylistIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/playlist/$playlistId': typeof PlaylistPlaylistIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/album/$albumId': typeof AlbumAlbumIdRoute
   '/artist/$artistId': typeof ArtistArtistIdRoute
   '/playlist/$playlistId': typeof PlaylistPlaylistIdRoute
@@ -93,42 +93,42 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/callback'
     | '/home'
     | '/login'
     | '/profile'
+    | '/search'
     | '/album/$albumId'
     | '/artist/$artistId'
     | '/playlist/$playlistId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/callback'
     | '/home'
     | '/login'
     | '/profile'
+    | '/search'
     | '/album/$albumId'
     | '/artist/$artistId'
     | '/playlist/$playlistId'
   id:
     | '__root__'
-    | '/'
     | '/callback'
     | '/home'
     | '/login'
     | '/profile'
+    | '/search'
     | '/album/$albumId'
     | '/artist/$artistId'
     | '/playlist/$playlistId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   CallbackRoute: typeof CallbackRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
+  SearchRoute: typeof SearchRoute
   AlbumAlbumIdRoute: typeof AlbumAlbumIdRoute
   ArtistArtistIdRoute: typeof ArtistArtistIdRoute
   PlaylistPlaylistIdRoute: typeof PlaylistPlaylistIdRoute
@@ -136,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -164,13 +171,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/playlist/$playlistId': {
       id: '/playlist/$playlistId'
       path: '/playlist/$playlistId'
@@ -196,11 +196,11 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   CallbackRoute: CallbackRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
+  SearchRoute: SearchRoute,
   AlbumAlbumIdRoute: AlbumAlbumIdRoute,
   ArtistArtistIdRoute: ArtistArtistIdRoute,
   PlaylistPlaylistIdRoute: PlaylistPlaylistIdRoute,

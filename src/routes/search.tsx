@@ -11,7 +11,7 @@ type HomeSearchParams = {
   page?: number
 }
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/search')({
   component: Home,
   validateSearch: (search: Record<string, unknown>): HomeSearchParams => ({
     q: typeof search.q === 'string' ? search.q : undefined,

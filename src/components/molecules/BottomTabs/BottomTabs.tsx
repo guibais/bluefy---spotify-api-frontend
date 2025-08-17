@@ -19,7 +19,7 @@ const tabs: Tab[] = [
     id: 'search',
     label: 'Buscar',
     icon: Search,
-    to: '/'
+    to: '/search'
   },
   {
     id: 'profile',
