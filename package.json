@@ -1,5 +1,5 @@
 {
-  "name": "bluefy",
+  "name": "purplefy",
   "private": true,
   "type": "module",
   "scripts": {
@@ -36,6 +36,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@inlang/paraglide-js": "^2.2.0",
+    "@inlang/paraglide-vite": "^1.4.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^24.3.0",

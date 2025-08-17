@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     port: 9091,
     host: true,
-    allowedHosts: ['https://6b70f4d2.bluefy---spotify-api-frontend.pages.dev/'],
+    allowedHosts: ['https://6b70f4d2.purplefy---spotify-api-frontend.pages.dev/'],
   },
   resolve: {
     alias: {
