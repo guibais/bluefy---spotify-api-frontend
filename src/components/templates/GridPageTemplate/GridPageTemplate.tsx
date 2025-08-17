@@ -7,9 +7,10 @@ export type GridPageTemplateProps = PropsWithChildren<{
   toolbar?: ReactNode
   pagination?: ReactNode
   showTabs?: boolean
+  mobileShowBack?: boolean
 }> 
 
-export const GridPageTemplate = ({ title, description, toolbar, pagination, showTabs = false, children }: GridPageTemplateProps) => {
+export const GridPageTemplate = ({ title, description, toolbar, pagination, showTabs = false, mobileShowBack = false, children }: GridPageTemplateProps) => {
   return (
     <>
       <div className="hidden md:block container py-8">
@@ -26,7 +27,7 @@ export const GridPageTemplate = ({ title, description, toolbar, pagination, show
         {pagination}
       </div>
 
-      <MobileLayout title={title} showBack={false} showTabs={showTabs}>
+      <MobileLayout title={title} showBack={mobileShowBack} showTabs={showTabs}>
         <div className="px-4 py-4">
           {toolbar && (
             <div className="mb-6">{toolbar}</div>

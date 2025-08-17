@@ -50,6 +50,7 @@ function Home() {
       title="Descubra Artistas"
       description="Explore artistas do Spotify. Encontre suas próximas descobertas."
       showTabs={false}
+      mobileShowBack={true}
       toolbar={
         <SearchBar
           placeholder="Buscar artistas..."

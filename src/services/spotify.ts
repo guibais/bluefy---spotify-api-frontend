@@ -36,12 +36,13 @@ export const spotifyService = {
     const params = new URLSearchParams()
     
     if (filters.query) {
-      params.append('q', `artist:${filters.query}`)
+      params.append('q', `${filters.query}`)
     }
     
     params.append('type', 'artist')
     params.append('limit', String(filters.limit || 20))
     params.append('offset', String((filters.page || 0) * (filters.limit || 20)))
+    params.append('locale', 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7')
 
     const response = await spotifyApi.get(`/search?${params.toString()}`)
     return response.data.artists
