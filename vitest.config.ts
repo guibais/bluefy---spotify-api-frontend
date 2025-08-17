@@ -14,7 +14,7 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['src/components/atoms/**/*.{ts,tsx}'],
+      include: ['src/components/atoms/**/*.{ts,tsx}', 'src/components/molecules/**/*.{ts,tsx}'],
       exclude: [
         '**/*.test.*',
         'src/**/__mocks__/**',

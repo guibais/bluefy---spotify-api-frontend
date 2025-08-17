@@ -14,3 +14,7 @@ export { Tabs } from './Tabs/Tabs'
 export { PlaylistHeader } from './PlaylistHeader/PlaylistHeader'
 export { MiniPlaylistCard } from './PlaylistCard/MiniPlaylistCard'
 export { AuthStatus } from './AuthStatus/AuthStatus'
+export { MobileHeader } from './MobileHeader/MobileHeader'
+export { BottomTabs } from './BottomTabs/BottomTabs'
+
+

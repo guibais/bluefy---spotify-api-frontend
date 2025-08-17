@@ -6,6 +6,7 @@ const openSpy = vi.spyOn(window, 'open')
 describe('OpenInSpotifyButton', () => {
   beforeEach(() => {
     openSpy.mockReset()
+    openSpy.mockImplementation(() => null as any)
   })
 
   it('opens url in new tab (button mode)', () => {
