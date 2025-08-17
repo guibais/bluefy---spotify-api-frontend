@@ -1,0 +1,10 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Olá mundo {username}",
+  "open_in_spotify": "Abrir no Spotify",
+  "home_playlists_title": "Suas Playlists",
+  "home_new_releases_title": "Novos Lançamentos",
+  "home_mobile_experience_title": "Sua experiência",
+  "page_home_title": "Início",
+  "page_home_description": "Descubra suas playlists e explore destaques do Spotify."
+}

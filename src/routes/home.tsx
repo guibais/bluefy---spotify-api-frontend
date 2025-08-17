@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { m } from '@/paraglide/messages.js'
 import { PageTemplate } from '@/components'
 import { useNewReleases, useMyPlaylists } from '@/hooks/useSpotify'
 import { Image } from '@/components/atoms/Image/Image'
@@ -58,7 +59,7 @@ function PlaylistCard({ name, image, subtitle, spotifyUrl, to }: CardProps) {
       )}
       {spotifyUrl && (
         <div className="mt-3">
-          <Button onClick={handleOpen} variant="secondary" className="w-full">Abrir no Spotify</Button>
+          <Button onClick={handleOpen} variant="secondary" className="w-full">{m.open_in_spotify()}</Button>
         </div>
       )}
     </div>
@@ -86,12 +87,9 @@ function HomePage() {
 
   const desktop = (
     <>
-      <div className="mb-10">
-        <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-3">Bem-vindo(a)</h1>
-        <p className="text-purplefy-light-gray text-lg">Descubra suas playlists e explore destaques do Spotify.</p>
-      </div>
+  
 
-      <Section title="Suas Playlists">
+      <Section title={m.home_playlists_title()}>
         {myPlaylists.isLoading ? (
           <div className="grid grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -115,7 +113,7 @@ function HomePage() {
         )}
       </Section>
 
-      <Section title="Novos Lançamentos">
+      <Section title={m.home_new_releases_title()}>
         {newReleases.isLoading ? (
           <div className="grid grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -142,10 +140,10 @@ function HomePage() {
 
   const mobile = (
     <>
-      <h1 className="text-2xl font-bold text-purplefy-white mb-4">Sua experiência</h1>
+      <h1 className="text-2xl font-bold text-purplefy-white mb-4">{m.home_mobile_experience_title()}</h1>
 
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-purplefy-white mb-3">Suas Playlists</h2>
+        <h2 className="text-lg font-semibold text-purplefy-white mb-3">{m.home_playlists_title()}</h2>
         {myPlaylists.isLoading ? (
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -170,7 +168,7 @@ function HomePage() {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold text-purplefy-white mb-3">Novos Lançamentos</h2>
+        <h2 className="text-lg font-semibold text-purplefy-white mb-3">{m.home_new_releases_title()}</h2>
         {newReleases.isLoading ? (
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -197,8 +195,8 @@ function HomePage() {
 
   return (
     <PageTemplate
-      title="Início"
-      description="Descubra suas playlists e explore destaques do Spotify."
+      title={m.page_home_title()}
+      description={m.page_home_description()}
       showBack={false}
       showTabs
       desktop={desktop}
