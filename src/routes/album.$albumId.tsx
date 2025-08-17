@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { BackButton, ErrorState } from '@/components'
 import { ArrowLeft, Calendar, ExternalLink, Disc } from 'lucide-react'
 import { useAlbum, useAlbumTracks } from '../hooks/useSpotify'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
@@ -20,18 +21,12 @@ function AlbumPage() {
   if (albumError) {
     return (
       <div className="container py-8">
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h3 className="text-xl font-semibold text-purplefy-white mb-2">
-            Erro ao carregar álbum
-          </h3>
-          <p className="text-purplefy-light-gray mb-4">
-            {albumError.message}
-          </p>
-          <Link to="/">
-            <Button variant="primary">Voltar para busca</Button>
-          </Link>
-        </div>
+        <ErrorState 
+          title="Erro ao carregar álbum"
+          message={albumError.message}
+          action={<BackButton fallbackTo="/home" variant="primary">Voltar para busca</BackButton>}
+          size="lg"
+        />
       </div>
     )
   }
@@ -52,7 +47,7 @@ function AlbumPage() {
           </div>
         </div>
 
-        <MobileLayout title="Carregando..." backTo="/">
+        <MobileLayout title="Carregando..." backTo="/home">
           <div className="px-4 py-4">
             <div className="flex flex-col gap-4 mb-6">
               <div className="skeleton w-full aspect-square rounded-xl" />
@@ -77,7 +72,7 @@ function AlbumPage() {
   return (
     <>
       <div className="hidden md:block container py-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
+        <Link to="/home" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
           <ArrowLeft className="w-4 h-4" />
           Voltar para busca
         </Link>
@@ -146,7 +141,7 @@ function AlbumPage() {
         />
       </div>
 
-      <MobileLayout title={album.name} backTo="/" showTabs={false}>
+      <MobileLayout title={album.name} backTo="/home" showTabs={false}>
         <div className="px-4 py-4">
           <div className="flex flex-col items-center text-center mb-6">
             <div className="w-64 h-64 mb-4">

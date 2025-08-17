@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { BackButton } from '@/components'
 import { useEffect, useRef, useState } from 'react'
 import { Loading } from '@/components/atoms'
 import { spotifyAuth } from '@/services/spotifyAuth'
@@ -43,7 +44,7 @@ function CallbackPage() {
 
         await spotifyAuth.getToken(code)
         setStatus('success')
-        const to = search.state && search.state.length > 0 ? search.state : '/'
+        const to = search.state && search.state.length > 0 ? search.state : '/home'
         setTimeout(() => {
           navigate({ to })
         }, 2000)
@@ -92,13 +93,9 @@ function CallbackPage() {
             <p className="mb-6 text-spotify-light-gray">
               {errorMessage}
             </p>
-            <button
-              type="button"
-              onClick={() => navigate({ to: '/' })}
-              className="px-6 py-2 rounded-full font-semibold transition-colors bg-blue-500 hover:bg-blue-400 text-black"
-            >
+            <BackButton fallbackTo="/home" variant="primary">
               Voltar ao início
-            </button>
+            </BackButton>
           </>
         )}
       </div>

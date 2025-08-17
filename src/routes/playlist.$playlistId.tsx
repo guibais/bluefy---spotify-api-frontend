@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ExternalLink, ArrowLeft, User } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
+import { ExternalLink, User } from 'lucide-react'
 import { usePlaylist, usePlaylistTracks } from '@/hooks/useSpotify'
 import { TrackList } from '@/components/organisms/TrackList/TrackList'
 import { Button } from '@/components/atoms/Button/Button'
+import { BackButton, DetailTemplate, ErrorState } from '@/components'
 import { Image } from '@/components/atoms/Image/Image'
-import { MobileLayout } from '@/components/organisms/MobileLayout/MobileLayout'
 
 export const Route = createFileRoute('/playlist/$playlistId')({
   component: PlaylistPage,
@@ -60,44 +60,29 @@ function PlaylistPage() {
   if (playlistError) {
     return (
       <div className="container py-8">
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">⚠️</div>
-          <h3 className="text-xl font-semibold text-purplefy-white mb-2">Erro ao carregar playlist</h3>
-          <p className="text-purplefy-light-gray mb-4">{(playlistError as Error).message}</p>
-          <Link to="/profile">
-            <Button variant="primary">Voltar</Button>
-          </Link>
-        </div>
+        <ErrorState 
+          title="Erro ao carregar playlist"
+          message={(playlistError as Error).message}
+          action={<BackButton fallbackTo="/profile" variant="primary">Voltar</BackButton>}
+          size="lg"
+        />
       </div>
     )
   }
 
   if (playlistLoading) {
     return (
-      <>
-        <div className="hidden md:block container py-8">
-          <div className="skeleton h-8 w-24 mb-6" />
-          <div className="flex flex-col md:flex-row gap-8 mb-8">
-            <div className="skeleton w-24 h-24 rounded-lg" />
-            <div className="flex-1 space-y-4">
-              <div className="skeleton h-12 w-3/4" />
-              <div className="skeleton h-6 w-1/2" />
-            </div>
+      <DetailTemplate title="Carregando..." backTo="/profile">
+        <div className="flex items-center gap-6 mb-8">
+          <div className="skeleton w-24 h-24 rounded-lg" />
+          <div className="flex-1 space-y-3">
+            <div className="skeleton h-8 w-1/2" />
+            <div className="skeleton h-5 w-1/3" />
           </div>
         </div>
 
-        <MobileLayout title="Carregando..." backTo="/profile">
-          <div className="px-4 py-4">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="skeleton w-16 h-16 rounded-lg" />
-              <div className="space-y-2">
-                <div className="skeleton h-6 w-32" />
-                <div className="skeleton h-4 w-40" />
-              </div>
-            </div>
-          </div>
-        </MobileLayout>
-      </>
+        <TrackList tracks={[]} loading title="Faixas da Playlist" />
+      </DetailTemplate>
     )
   }
 
@@ -107,13 +92,10 @@ function PlaylistPage() {
   const tracks = tracksData?.items || []
 
   return (
-    <>
-      <div className="hidden md:block container py-8">
-        <Link to="/profile" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" />
-          Voltar ao perfil
-        </Link>
-
+    <DetailTemplate
+      title={playlist.name}
+      backTo="/profile"
+      header={
         <PlaylistHeader
           name={playlist.name}
           imageUrl={imageUrl}
@@ -121,25 +103,17 @@ function PlaylistPage() {
           followers={(playlist as any)?.followers?.total}
           externalUrl={playlist.external_urls?.spotify}
         />
-
-        <TrackList tracks={tracks} loading={tracksLoading} title="Faixas da Playlist" />
-      </div>
-
-      <MobileLayout title={playlist.name} backTo="/profile" showTabs={false}>
-        <div className="px-4 py-4">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16">
-              <Image src={imageUrl} alt={playlist.name} className="w-16 h-16 rounded-lg object-cover" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-purplefy-white">{playlist.name}</h1>
-              <p className="text-purplefy-light-gray text-sm">{playlist.owner?.display_name || '-'}</p>
-            </div>
-          </div>
-
-          <TrackList tracks={tracks} loading={tracksLoading} title="" />
-        </div>
-      </MobileLayout>
-    </>
+      }
+      actions={
+        playlist.external_urls?.spotify ? (
+          <Button onClick={() => window.open(playlist.external_urls.spotify, '_blank')} variant="secondary" className="inline-flex items-center gap-2">
+            <ExternalLink className="w-4 h-4" />
+            Abrir no Spotify
+          </Button>
+        ) : null
+      }
+    >
+      <TrackList tracks={tracks} loading={tracksLoading} title="Faixas da Playlist" />
+    </DetailTemplate>
   )
 }

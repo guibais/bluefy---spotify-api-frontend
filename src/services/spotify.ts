@@ -66,6 +66,32 @@ export const spotifyService = {
     return response.data.albums
   },
 
+  searchAlbumsAndArtists: async (
+    filters: SearchFilters
+  ): Promise<{ albums: SpotifySearchResponse<SpotifyAlbum>; artists: SpotifySearchResponse<SpotifyArtist> }> => {
+    const params = new URLSearchParams()
+
+    const qParts: string[] = []
+    if (filters.artistName) qParts.push(`artist:${filters.artistName}`)
+    if (filters.albumName) qParts.push(`album:${filters.albumName}`)
+    if (filters.query && qParts.length === 0) qParts.push(filters.query)
+    if (qParts.length > 0) {
+      params.append('q', qParts.join(' '))
+    }
+
+    params.append('type', 'album,artist')
+    const limit = String(filters.limit || 20)
+    const offset = String((filters.page || 0) * (filters.limit || 20))
+    params.append('limit', limit)
+    params.append('offset', offset)
+
+    const response = await spotifyApi.get(`/search?${params.toString()}`)
+    return {
+      albums: response.data.albums,
+      artists: response.data.artists,
+    }
+  },
+
   getArtist: async (artistId: string): Promise<SpotifyArtist> => {
     const response = await spotifyApi.get(`/artists/${artistId}`)
     return response.data

@@ -29,6 +29,22 @@ export const useSearchArtists = (filters: SearchFilters) => {
   })
 }
 
+export const useSearchAlbumsAndArtists = (filters: SearchFilters) => {
+  const { isAuthenticated } = useAuth()
+  return useQuery<{ albums: SpotifySearchResponse<SpotifyAlbum>; artists: SpotifySearchResponse<SpotifyArtist>}>({
+    queryKey: ['searchAlbumsAndArtists', filters],
+    queryFn: () => spotifyService.searchAlbumsAndArtists(filters),
+    enabled: (!!filters.query || !!filters.artistName || !!filters.albumName) && isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if ((error as any)?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
 export const useSearchAlbums = (filters: SearchFilters) => {
   const { isAuthenticated } = useAuth()
   
