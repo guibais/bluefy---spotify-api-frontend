@@ -67,5 +67,9 @@
   "artist_tablist_label": "Artist content navigation",
   "artists_title": "Artists",
   "nav_logout": "Log out",
-  "primary_navigation_label": "Primary navigation"
+  "primary_navigation_label": "Primary navigation",
+  "login_title": "Connect to Spotify",
+  "login_description": "To access your favorite songs and artists, sign in with your Spotify account.",
+  "login_button": "Sign in with Spotify",
+  "login_redirect_note": "You will be redirected to Spotify to authorize access"
 }

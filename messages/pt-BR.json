@@ -69,5 +69,9 @@
   "artist_tablist_label": "Navegação do conteúdo do artista",
   "artists_title": "Artistas",
   "nav_logout": "Sair",
-  "primary_navigation_label": "Navegação principal"
+  "primary_navigation_label": "Navegação principal",
+  "login_title": "Conectar ao Spotify",
+  "login_description": "Para acessar suas músicas e artistas favoritos, conecte-se com sua conta do Spotify.",
+  "login_button": "Conectar com Spotify",
+  "login_redirect_note": "Você será redirecionado para o Spotify para autorizar o acesso"
 }

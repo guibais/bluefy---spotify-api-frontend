@@ -1,6 +1,7 @@
 import { Button } from '@/components/atoms'
 import { spotifyAuth } from '@/services/spotifyAuth'
 import { Music, LogIn } from 'lucide-react'
+import * as m from '@/paraglide/messages.js'
 
 type SpotifyLoginProps = {
   onLogin?: () => void
@@ -23,11 +24,11 @@ export const SpotifyLogin = ({ onLogin, state }: SpotifyLoginProps) => {
         <Music className="w-16 h-16 mx-auto mb-6 text-blue-500" />
         
         <h2 className="text-2xl font-bold mb-4 text-spotify-white">
-          Conectar ao Spotify
+          {m.login_title()}
         </h2>
         
         <p className="mb-6 text-spotify-light-gray">
-          Para acessar suas músicas e artistas favoritos, conecte-se com sua conta do Spotify.
+          {m.login_description()}
         </p>
 
         <Button
@@ -37,11 +38,11 @@ export const SpotifyLogin = ({ onLogin, state }: SpotifyLoginProps) => {
           className="inline-flex items-center justify-center gap-2"
         >
           <LogIn className="w-5 h-5" />
-          Conectar com Spotify
+          {m.login_button()}
         </Button>
 
         <p className="text-sm mt-4 text-spotify-light-gray">
-          Você será redirecionado para o Spotify para autorizar o acesso
+          {m.login_redirect_note()}
         </p>
       </div>
     </div>

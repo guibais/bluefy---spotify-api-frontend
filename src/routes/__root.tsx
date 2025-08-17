@@ -18,16 +18,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     const { isAuthenticated, clearTokens } = useAuth()
     const location = useLocation()
     const path = location.pathname
-    if (!isAuthenticated && path !== '/login' && path !== '/callback') {
+    const segments = path.split('/').filter(Boolean)
+    const localeRegex = /^[a-z]{2}(?:-[A-Z]{2})?$/
+    const hasLocale = segments.length > 0 && localeRegex.test(segments[0] ?? '')
+    const basePath = `/${hasLocale ? segments.slice(1).join('/') : segments.join('/')}` || '/'
+    if (!isAuthenticated && basePath !== '/login' && basePath !== '/callback') {
       const searchStr = typeof window !== 'undefined' ? window.location.search : ''
       return (
         <Navigate
-          to="/login"
+          to="/login"  
           search={{ from: `${path}${searchStr}` }}
         />
       )
     }
-    if (isAuthenticated && path === '/login') {
+    if (isAuthenticated && basePath === '/login') {
       return <Navigate to="/home" />
     }
     

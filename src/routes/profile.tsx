@@ -3,14 +3,17 @@ import { useMe, useMyPlaylists } from '@/hooks/useSpotify'
 import type { SpotifyPlaylist } from '@/types'
 import { MobileLayout } from '@/components/organisms/MobileLayout/MobileLayout'
 import { Image } from '@/components/atoms/Image/Image'
-import { OpenInSpotifyButton } from '@/components/atoms'
+import { Button, OpenInSpotifyButton } from '@/components/atoms'
 import * as m from '@/paraglide/messages.js'
+import { useAuth } from '@/hooks/useAuth'
+import { LogOut } from 'lucide-react'
 
 export const Route = createFileRoute('/profile')({
   component: ProfilePage,
 })
 
 function ProfilePage() {
+  const { clearTokens } = useAuth()
   const getLocaleFromPath = () => (window.location.pathname.startsWith('/en') ? 'en' : 'pt-BR')
   const setLocale = (locale: 'pt-BR' | 'en') => {
     const { pathname, search, hash } = window.location
@@ -25,6 +28,10 @@ function ProfilePage() {
       window.location.assign(next)
       return
     }
+  }
+  const handleLogout = () => {
+    clearTokens()
+    window.location.reload()
   }
 
   const { data: me, isLoading: meLoading, error: meError } = useMe()
@@ -49,20 +56,6 @@ function ProfilePage() {
   return (
     <>
       <div className="hidden md:block container py-8">
-        <div className="flex items-center justify-end mb-6 gap-3">
-          <label htmlFor="lang-select" className="text-sm text-purplefy-light-gray">
-            {m.language_label()}
-          </label>
-          <select
-            id="lang-select"
-            className="input-field w-48"
-            defaultValue={getLocaleFromPath()}
-            onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
-          >
-            <option value="pt-BR">{m.language_portuguese()}</option>
-            <option value="en">{m.language_english()}</option>
-          </select>
-        </div>
         {meLoading ? (
           <div className="flex items-center gap-6 mb-10">
             <div className="skeleton w-24 h-24 rounded-full" />
@@ -79,7 +72,18 @@ function ProfilePage() {
                   <Image src={me.images?.[0]?.url} alt={me.display_name || me.id} className="w-24 h-24 rounded-full object-cover" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-purplefy-white">{me.display_name || me.id}</h1>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-3xl font-bold text-purplefy-white">{me.display_name || me.id}</h1>
+                    <select
+                      aria-label={m.language_label()}
+                      className="text-xs bg-purplefy-dark text-purplefy-white border border-purple-500 rounded-full px-3 py-1"
+                      defaultValue={getLocaleFromPath()}
+                      onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
+                    >
+                      <option value="pt-BR">{m.language_portuguese()}</option>
+                      <option value="en">{m.language_english()}</option>
+                    </select>
+                  </div>
                   <p className="text-purplefy-light-gray">{me.email || me.country}</p>
                   <div className="mt-2 grid grid-cols-3 gap-4 text-sm text-purplefy-light-gray">
                     <div>
@@ -97,7 +101,13 @@ function ProfilePage() {
                   </div>
                 </div>
               </div>
-              {me.external_urls?.spotify && <OpenInSpotifyButton url={me.external_urls!.spotify} />}
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2 text-spotify-light-gray hover:text-spotify-white">
+                  <LogOut className="w-4 h-4" />
+                  {m.nav_logout()}
+                </Button>
+                {me.external_urls?.spotify && <OpenInSpotifyButton url={me.external_urls!.spotify} />}
+              </div>
             </div>
           )
         )}
@@ -142,20 +152,6 @@ function ProfilePage() {
 
       <MobileLayout title={m.profile_title()} showTabs={false}>
         <div className="px-4 py-4">
-          <div className="flex items-center justify-end mb-4 gap-2">
-            <label htmlFor="lang-select-m" className="text-xs text-purplefy-light-gray">
-              {m.language_label()}
-            </label>
-            <select
-              id="lang-select-m"
-              className="input-field w-auto text-sm"
-              defaultValue={getLocaleFromPath()}
-              onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
-            >
-              <option value="pt-BR">{m.language_portuguese()}</option>
-              <option value="en">{m.language_english()}</option>
-            </select>
-          </div>
           {meLoading ? (
             <div className="flex items-center gap-4 mb-6">
               <div className="skeleton w-16 h-16 rounded-full" />
@@ -170,9 +166,26 @@ function ProfilePage() {
                 <div className="w-16 h-16">
                   <Image src={me.images?.[0]?.url} alt={me.display_name || me.id} className="w-16 h-16 rounded-full object-cover" />
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-purplefy-white">{me.display_name || me.id}</h1>
-                  <p className="text-purplefy-light-gray text-sm">{me.email || me.country}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h1 className="text-xl font-bold text-purplefy-white truncate">{me.display_name || me.id}</h1>
+                    <div className="flex items-center gap-2">
+                      <select
+                        aria-label={m.language_label()}
+                        className="text-[11px] bg-purplefy-dark text-purplefy-white border border-purple-500 rounded-full px-2 py-1"
+                        defaultValue={getLocaleFromPath()}
+                        onChange={(e) => setLocale(e.target.value as 'pt-BR' | 'en')}
+                      >
+                        <option value="pt-BR">{m.language_portuguese()}</option>
+                        <option value="en">{m.language_english()}</option>
+                      </select>
+                      <Button size="sm" variant="ghost" onClick={handleLogout} className="flex items-center gap-1 text-spotify-light-gray hover:text-spotify-white">
+                        <LogOut className="w-3 h-3" />
+                        {m.nav_logout()}
+                      </Button>
+                    </div>
+                  </div>
+                  <p className="text-purplefy-light-gray text-sm truncate">{me.email || me.country}</p>
                   <div className="mt-2 grid grid-cols-3 gap-3 text-[11px] text-purplefy-light-gray">
                     <div>
                       <span className="block text-[10px] uppercase tracking-wide">{m.followers_label()}</span>

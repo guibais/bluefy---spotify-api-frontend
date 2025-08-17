@@ -32,13 +32,20 @@ export const spotifyAuth = {
     useAuthStore.getState().setCodeVerifier(codeVerifier)
 
     const authUrl = new URL('https://accounts.spotify.com/authorize')
+    const getRedirectUri = () => {
+      const base = new URL(REDIRECT_URI)
+      const isEn = typeof window !== 'undefined' && window.location.pathname.startsWith('/en')
+      if (isEn && !base.pathname.startsWith('/en/')) base.pathname = `/en${base.pathname}`
+      if (!isEn && base.pathname.startsWith('/en/')) base.pathname = base.pathname.replace(/^\/en/, '')
+      return base.toString()
+    }
     const params: Record<string, string> = {
       response_type: 'code',
       client_id: CLIENT_ID,
       scope: SCOPE,
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: getRedirectUri(),
     }
     if (state) params.state = state
 
@@ -54,6 +61,13 @@ export const spotifyAuth = {
     }
 
     const url = 'https://accounts.spotify.com/api/token'
+    const getRedirectUri = () => {
+      const base = new URL(REDIRECT_URI)
+      const isEn = typeof window !== 'undefined' && window.location.pathname.startsWith('/en')
+      if (isEn && !base.pathname.startsWith('/en/')) base.pathname = `/en${base.pathname}`
+      if (!isEn && base.pathname.startsWith('/en/')) base.pathname = base.pathname.replace(/^\/en/, '')
+      return base.toString()
+    }
     const payload = {
       method: 'POST',
       headers: {
@@ -63,7 +77,7 @@ export const spotifyAuth = {
         client_id: CLIENT_ID,
         grant_type: 'authorization_code',
         code,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: getRedirectUri(),
         code_verifier: codeVerifier,
       }),
     }

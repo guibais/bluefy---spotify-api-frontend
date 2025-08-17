@@ -14,6 +14,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CallbackRouteImport } from './routes/callback'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlaylistPlaylistIdRouteImport } from './routes/playlist.$playlistId'
 import { Route as ArtistArtistIdRouteImport } from './routes/artist.$artistId'
 import { Route as AlbumAlbumIdRouteImport } from './routes/album.$albumId'
@@ -43,6 +44,11 @@ const CallbackRoute = CallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlaylistPlaylistIdRoute = PlaylistPlaylistIdRouteImport.update({
   id: '/playlist/$playlistId',
   path: '/playlist/$playlistId',
@@ -60,6 +66,7 @@ const AlbumAlbumIdRoute = AlbumAlbumIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/playlist/$playlistId': typeof PlaylistPlaylistIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -81,6 +89,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -93,6 +102,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/callback'
     | '/home'
     | '/login'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/playlist/$playlistId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/callback'
     | '/home'
     | '/login'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/playlist/$playlistId'
   id:
     | '__root__'
+    | '/'
     | '/callback'
     | '/home'
     | '/login'
@@ -124,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   CallbackRoute: typeof CallbackRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/playlist/$playlistId': {
       id: '/playlist/$playlistId'
       path: '/playlist/$playlistId'
@@ -196,6 +216,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   CallbackRoute: CallbackRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
