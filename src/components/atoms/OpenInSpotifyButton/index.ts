@@ -1,0 +1,1 @@
+export { OpenInSpotifyButton } from './OpenInSpotifyButton'
