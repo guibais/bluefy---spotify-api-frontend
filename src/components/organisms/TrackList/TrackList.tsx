@@ -53,7 +53,11 @@ export const TrackList = ({
   }
 
   return (
-    <div className={`space-y-2 ${className || ''}`}>
+    <div
+      className={`space-y-2 ${className || ''}`}
+      role="list"
+      aria-label={title || m.tracks_title()}
+    >
       {title && (
         <h3 className="text-xl font-bold text-purplefy-white mb-4">{title}</h3>
       )}

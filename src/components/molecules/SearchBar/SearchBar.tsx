@@ -32,6 +32,7 @@ export const SearchBar = ({
       value={query}
       onChange={(e) => setQuery(e.target.value)}
       placeholder={placeholder}
+      aria-label={m.search_artists_input_label()}
       showSearch
       onClear={query ? handleClear : undefined}
       className={className}

@@ -62,5 +62,12 @@
   "auth_code_not_found": "Código de autorização não encontrado",
   "auth_unknown_error": "Erro desconhecido",
   "tracks_empty_title": "Nenhuma música encontrada",
-  "tracks_empty_message": "Não há faixas disponíveis no momento"
+  "tracks_empty_message": "Não há faixas disponíveis no momento",
+  "search_artists_input_label": "Buscar artistas",
+  "artist_card_link_label": "Ver artista {name}",
+  "album_card_link_label": "Ver álbum {name}",
+  "artist_tablist_label": "Navegação do conteúdo do artista",
+  "artists_title": "Artistas",
+  "nav_logout": "Sair",
+  "primary_navigation_label": "Navegação principal"
 }

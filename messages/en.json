@@ -60,5 +60,12 @@
   "auth_error_title": "Authentication error",
   "back_to_home": "Back to home",
   "tracks_empty_title": "No tracks found",
-  "tracks_empty_message": "There are no tracks available at the moment"
+  "tracks_empty_message": "There are no tracks available at the moment",
+  "search_artists_input_label": "Search artists",
+  "artist_card_link_label": "View artist {name}",
+  "album_card_link_label": "View album {name}",
+  "artist_tablist_label": "Artist content navigation",
+  "artists_title": "Artists",
+  "nav_logout": "Log out",
+  "primary_navigation_label": "Primary navigation"
 }

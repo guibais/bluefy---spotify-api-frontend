@@ -325,7 +325,7 @@ function ArtistPage() {
             <OpenInSpotifyButton url={artist.external_urls.spotify} variant="primary" size="sm" />
           </div>
 
-          <div className="mb-4" role="tablist" aria-label="Selecionar conteúdo do artista">
+          <div className="mb-4" role="tablist" aria-label={m.artist_tablist_label()}>
             <div className="flex items-center justify-between border-b border-purplefy-medium-gray/60">
               <button
                 role="tab"

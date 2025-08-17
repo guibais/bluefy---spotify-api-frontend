@@ -17,6 +17,7 @@ export const AlbumCard = ({ album, className }: AlbumCardProps) => {
     <Link
       to="/album/$albumId"
       params={{ albumId: album.id }}
+      aria-label={m.album_card_link_label({ name: album.name })}
       className={`card group ${className || ''}`}
     >
       <div className="relative">

@@ -17,6 +17,7 @@ export const ArtistCard = ({ artist, className }: ArtistCardProps) => {
       to="/artist/$artistId"
       params={{ artistId: artist.id }}
       search={{ albumPage: 1 }}
+      aria-label={m.artist_card_link_label({ name: artist.name })}
       className={`card group ${className || ''}`}
     >
       <div className="relative">

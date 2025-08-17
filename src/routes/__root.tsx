@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 import { Music, LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import * as m from '@/paraglide/messages.js'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
@@ -45,20 +46,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                 <span className="text-xl font-bold">purplefy</span>
               </Link>
               
-              <nav className="flex items-center gap-6">
+              <nav className="flex items-center gap-6" aria-label={m.primary_navigation_label()}>
                    <Link 
                   to="/home" 
                   className="text-spotify-light-gray hover:text-spotify-white transition-colors"
                   activeProps={{ className: "text-blue-500" }}
                 >
-                  Home
+                  {m.nav_home()}
                 </Link>
                 <Link 
                   to="/search" 
                   className="text-spotify-light-gray hover:text-spotify-white transition-colors"
                   activeProps={{ className: "text-blue-500" }}
                 >
-                  Buscar
+                  {m.nav_search()}
                 </Link>
                 {isAuthenticated && (
                   <Link 
@@ -66,7 +67,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                     className="text-spotify-light-gray hover:text-spotify-white transition-colors"
                     activeProps={{ className: "text-blue-500" }}
                   >
-                    Perfil
+                    {m.nav_profile()}
                   </Link>
                 )}
                 
@@ -75,9 +76,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
                     type="button"
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-spotify-light-gray hover:text-spotify-white transition-colors"
+                    aria-label={m.nav_logout()}
                   >
                     <LogOut className="w-4 h-4" />
-                    <span className="hidden sm:inline">Sair</span>
+                    <span className="hidden sm:inline">{m.nav_logout()}</span>
                   </button>
                 )}
               </nav>
@@ -85,21 +87,23 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
           </div>
         </header>
       
-      <main className="min-h-screen bg-spotify-black">
+      <main className="min-h-screen bg-spotify-black" role="main">
         <Outlet />
       </main>
-        <TanstackDevtools
-          config={{
-            position: 'bottom-left',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
+        {import.meta.env.DEV && (
+          <TanstackDevtools
+            config={{
+              position: 'bottom-left',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+              TanStackQueryDevtools,
+            ]}
+          />
+        )}
       </>
     )
   },
