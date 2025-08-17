@@ -14,10 +14,13 @@ type AuthState = {
   accessToken: string | null
   refreshToken: string | null
   expiresAt: number | null
+  codeVerifier: string | null
   setTokens: (tokenData: SpotifyTokenData) => void
   clearTokens: () => void
   getValidToken: () => string | null
   isAuthenticated: () => boolean
+  setCodeVerifier: (value: string | null) => void
+  consumeCodeVerifier: () => string | null
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,6 +29,7 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       expiresAt: null,
+      codeVerifier: null,
 
       setTokens: (tokenData: SpotifyTokenData) => {
         const expiresAt = Date.now() + (tokenData.expires_in * 1000)
@@ -43,6 +47,16 @@ export const useAuthStore = create<AuthState>()(
           refreshToken: null,
           expiresAt: null,
         })
+      },
+
+      setCodeVerifier: (value: string | null) => {
+        set({ codeVerifier: value })
+      },
+
+      consumeCodeVerifier: () => {
+        const { codeVerifier } = get()
+        set({ codeVerifier: null })
+        return codeVerifier
       },
 
       getValidToken: () => {
@@ -65,11 +79,12 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'spotify-auth',
-      version: 1,
+      version: 2,
       partialize: (state) => ({
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         expiresAt: state.expiresAt,
+        codeVerifier: state.codeVerifier,
       }),
       storage: createJSONStorage(() => {
         const cookieStorage: StateStorage = {

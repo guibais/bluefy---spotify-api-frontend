@@ -29,7 +29,7 @@ export const spotifyAuth = {
     const hashed = await sha256(codeVerifier)
     const codeChallenge = base64encode(hashed)
 
-    localStorage.setItem('code_verifier', codeVerifier)
+    useAuthStore.getState().setCodeVerifier(codeVerifier)
 
     const authUrl = new URL('https://accounts.spotify.com/authorize')
     const params: Record<string, string> = {
@@ -47,7 +47,7 @@ export const spotifyAuth = {
   },
 
   async getToken(code: string): Promise<void> {
-    const codeVerifier = localStorage.getItem('code_verifier')
+    const codeVerifier = useAuthStore.getState().consumeCodeVerifier()
     
     if (!codeVerifier) {
       throw new Error('Code verifier não encontrado')
@@ -76,7 +76,6 @@ export const spotifyAuth = {
     }
 
     useAuthStore.getState().setTokens(data)
-    localStorage.removeItem('code_verifier')
   },
 
   getStoredToken(): string | null {
@@ -85,7 +84,7 @@ export const spotifyAuth = {
 
   clearTokens(): void {
     useAuthStore.getState().clearTokens()
-    localStorage.removeItem('code_verifier')
+    useAuthStore.getState().setCodeVerifier(null)
   },
 
   isAuthenticated(): boolean {

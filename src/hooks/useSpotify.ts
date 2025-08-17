@@ -206,6 +206,47 @@ export const useMyPlaylists = (limit: number = 20) => {
   })
 }
 
+// Playlist detail
+export const usePlaylist = (playlistId: string) => {
+  const { isAuthenticated } = useAuth()
+  return useQuery<SpotifyPlaylist>({
+    queryKey: ['playlist', playlistId],
+    queryFn: () => spotifyService.getPlaylist(playlistId),
+    enabled: !!playlistId && isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if ((error as any)?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
+export const usePlaylistTracks = (playlistId: string) => {
+  const { isAuthenticated } = useAuth()
+  return useQuery<SpotifySearchResponse<SpotifyTrack>>({
+    queryKey: ['playlistTracks', playlistId],
+    queryFn: async () => {
+      const data = await spotifyService.getPlaylistTracks(playlistId)
+      // Some APIs return items with { track } shape; normalize to items: Track[] if needed
+      if (Array.isArray((data as any).items) && (data as any).items.length && (data as any).items[0]?.track) {
+        const tracks = (data as any).items.map((it: any) => it.track)
+        return { ...data, items: tracks } as SpotifySearchResponse<SpotifyTrack>
+      }
+      return data
+    },
+    enabled: !!playlistId && isAuthenticated,
+    staleTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if ((error as any)?.response?.status === 401) {
+        return false
+      }
+      return failureCount < 3
+    },
+  })
+}
+
 // deprecated useFeaturedPlaylists removed
 
 // New Releases

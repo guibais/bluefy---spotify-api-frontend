@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { useMe, useMyPlaylists } from '@/hooks/useSpotify'
 import type { SpotifyPlaylist } from '@/types'
@@ -93,7 +93,7 @@ function ProfilePage() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {playlistsFirstPage.map((pl) => (
-                <div key={pl.id} className="card p-3">
+                <Link key={pl.id} to="/playlist/$playlistId" params={{ playlistId: pl.id }} className="card p-3 hover:bg-purplefy-medium-gray/40 transition-colors">
                   <Image src={pl.images?.[0]?.url} alt={pl.name} className="w-full aspect-square rounded-lg mb-3" />
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
@@ -103,7 +103,7 @@ function ProfilePage() {
                     {pl.external_urls?.spotify && (
                       <button
                         type="button"
-                        onClick={() => window.open(pl.external_urls.spotify, '_blank')}
+                        onClick={(e) => { e.preventDefault(); window.open(pl.external_urls!.spotify, '_blank') }}
                         className="text-blue-500 hover:text-blue-400"
                         aria-label={`Abrir playlist ${pl.name} no Spotify`}
                       >
@@ -111,7 +111,7 @@ function ProfilePage() {
                       </button>
                     )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -172,7 +172,7 @@ function ProfilePage() {
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 {playlistsFirstPage.slice(0, 6).map((pl) => (
-                  <div key={pl.id} className="card p-2">
+                  <Link key={pl.id} to="/playlist/$playlistId" params={{ playlistId: pl.id }} className="card p-2 hover:bg-purplefy-medium-gray/40 transition-colors">
                     <Image src={pl.images?.[0]?.url} alt={pl.name} className="w-full aspect-square rounded-lg mb-2" />
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
@@ -182,7 +182,7 @@ function ProfilePage() {
                       {pl.external_urls?.spotify && (
                         <button
                           type="button"
-                          onClick={() => window.open(pl.external_urls.spotify, '_blank')}
+                          onClick={(e) => { e.preventDefault(); window.open(pl.external_urls!.spotify, '_blank') }}
                           className="text-blue-500 hover:text-blue-400"
                           aria-label={`Abrir playlist ${pl.name} no Spotify`}
                         >
@@ -190,7 +190,7 @@ function ProfilePage() {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
