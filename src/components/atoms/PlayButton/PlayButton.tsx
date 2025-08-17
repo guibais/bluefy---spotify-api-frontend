@@ -1,5 +1,5 @@
 import { Play, Pause } from 'lucide-react'
-import { useAudioPlayer } from '../../../hooks/useAudioPlayer'
+import { useAudioPlayer as usePlayer } from '@/hooks/useAudioPlayer'
 
 type PlayButtonProps = {
   playlistId?: string
@@ -14,7 +14,7 @@ export const PlayButton = ({
   variant = 'primary',
   className = '' 
 }: PlayButtonProps) => {
-  const { currentPlaylistId, isPlaying, playPlaylist, togglePlayPause } = useAudioPlayer()
+  const { currentPlaylistId, isPlaying, playPlaylist, togglePlayPause } = usePlayer()
 
   const targetPlaylistId = playlistId || null
   const isCurrent = !!targetPlaylistId && currentPlaylistId === targetPlaylistId
@@ -49,29 +49,29 @@ export const PlayButton = ({
   )
 }
 
-const getSizeClasses = (size: string) => {
+const getSizeClasses = (size: 'sm' | 'md' | 'lg') => {
   const sizes = {
     sm: 'w-8 h-8',
     md: 'w-12 h-12',
-    lg: 'w-16 h-16'
+    lg: 'w-16 h-16',
   }
-  return sizes[size as keyof typeof sizes] || sizes.md
+  return sizes[size]
 }
 
-const getIconSize = (size: string) => {
+const getIconSize = (size: 'sm' | 'md' | 'lg') => {
   const sizes = {
     sm: 'w-3 h-3',
     md: 'w-5 h-5',
-    lg: 'w-7 h-7'
+    lg: 'w-7 h-7',
   }
-  return sizes[size as keyof typeof sizes] || sizes.md
+  return sizes[size]
 }
 
-const getVariantClasses = (variant: string) => {
+const getVariantClasses = (variant: 'primary' | 'secondary' | 'ghost') => {
   const variants = {
     primary: 'bg-purplefy-primary hover:bg-purplefy-secondary shadow-lg hover:shadow-xl',
     secondary: 'bg-purplefy-medium-gray hover:bg-purplefy-primary border border-purplefy-primary/30',
-    ghost: 'bg-transparent hover:bg-purplefy-primary/20 border border-purplefy-primary/50'
+    ghost: 'bg-transparent hover:bg-purplefy-primary/20 border border-purplefy-primary/50',
   }
-  return variants[variant as keyof typeof variants] || variants.primary
+  return variants[variant]
 }

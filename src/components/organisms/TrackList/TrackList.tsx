@@ -1,14 +1,16 @@
 import { TrackItem } from '@/components/molecules'
-import type { SpotifyTrack } from '@/types'
 import * as m from '@/paraglide/messages.js'
 
-type TrackListProps = {
+import type { SpotifyTrack } from '@/types'
+
+export type TrackListProps = {
   tracks: SpotifyTrack[]
   loading?: boolean
   showAlbum?: boolean
   title?: string
   className?: string
 }
+
 
 export const TrackList = ({ 
   tracks, 
