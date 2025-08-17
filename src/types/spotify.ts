@@ -4,7 +4,6 @@ export type SpotifyImage = {
   width: number | null
 }
 
-// Common
 export type SpotifyTimeRange = 'short_term' | 'medium_term' | 'long_term'
 
 export type SpotifyArtist = {
@@ -81,7 +80,6 @@ export type PaginationInfo = {
   hasPrevious: boolean
 }
 
-// User / Profile
 export type SpotifyUser = {
   id: string
   display_name: string | null
@@ -93,7 +91,6 @@ export type SpotifyUser = {
   external_urls?: { spotify: string }
 }
 
-// Playlists
 export type SpotifyPlaylistOwner = {
   id: string
   display_name: string | null

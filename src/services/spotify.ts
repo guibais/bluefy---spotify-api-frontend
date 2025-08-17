@@ -162,7 +162,6 @@ export const spotifyService = {
     return response.data
   },
 
-  // Playlists
   getMyPlaylists: async (offset: number = 0, limit: number = 20): Promise<SpotifySearchResponse<SpotifyPlaylist>> => {
     const params = new URLSearchParams()
     params.append('limit', String(limit))

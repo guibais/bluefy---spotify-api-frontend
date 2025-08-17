@@ -1,13 +1,13 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { BackButton, ErrorState } from '@/components'
-import { ArrowLeft, Users } from 'lucide-react'
 import { useArtist, useArtistTopTracks, useArtistAlbums, useNewReleases, useSearchAlbums } from '../hooks/useSpotify'
 import { useDebounce } from '../hooks/useDebounce'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
 import { AlbumGrid } from '../components/organisms/AlbumGrid/AlbumGrid'
-import { Image } from '../components/atoms/Image/Image'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
-import { OpenInSpotifyButton } from '@/components/atoms'
+import { Input } from '@/components/atoms'
+import { BackLink, Tabs } from '@/components/molecules'
+import { ArtistHeader } from '@/components/organisms'
 import * as m from '@/paraglide/messages.js'
 
 type ArtistSearchParams = {
@@ -144,90 +144,29 @@ function ArtistPage() {
   return (
     <>
       <div className="hidden md:block container py-8">
-        <Link to="/home" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" />
-          {m.back_to_search()}
-        </Link>
+        <BackLink to="/home" label={m.back_to_search()} />
 
-        <div className="flex flex-col md:flex-row gap-8 mb-8">
-          <div className="w-full md:w-80">
-            <Image
-              src={imageUrl}
-              alt={artist.name}
-              className="w-full aspect-square rounded-xl shadow-2xl"
-            />
-          </div>
-
-          <div className="flex-1">
-            <h1 className="text-4xl md:text-6xl font-bold text-purplefy-white mb-4">
-              {artist.name}
-            </h1>
-
-            <div className="flex items-center gap-6 mb-6">
-              <div className="flex items-center gap-2 text-purplefy-light-gray">
-                <Users className="w-5 h-5" />
-                <span>{artist.followers.total.toLocaleString()}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="flex-1 bg-purplefy-dark-gray rounded-full h-2 w-24">
-                  <div 
-                    className="bg-gradient-to-r from-purplefy-primary to-purplefy-secondary h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${artist.popularity}%` }}
-                  />
-                </div>
-                <span className="text-sm text-purplefy-light-gray">{artist.popularity}% {m.popular_label()}</span>
-              </div>
-            </div>
-
-            {artist.genres.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {artist.genres.map((genre) => (
-                  <span
-                    key={genre}
-                    className="px-3 py-1 bg-purplefy-medium-gray text-purplefy-light-gray text-sm rounded-full border border-purplefy-primary/20"
-                  >
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <OpenInSpotifyButton url={artist.external_urls.spotify} variant="primary" />
-          </div>
-        </div>
+        <ArtistHeader
+          name={artist.name}
+          imageUrl={imageUrl}
+          followers={artist.followers.total}
+          popularity={artist.popularity}
+          genres={artist.genres}
+          externalUrl={artist.external_urls.spotify}
+          layout="desktop"
+        />
 
         <div className="border-b border-purplefy-medium-gray mb-8">
-          <nav className="flex gap-8">
-            <button
-              onClick={() =>
-                navigate({
-                  search: (prev) => ({ ...prev, tab: 'tracks' as const }),
-                })
-              }
-              className={`pb-4 px-1 border-b-2 font-medium transition-colors ${
-                activeTab === 'tracks'
-                  ? 'border-purplefy-primary text-purplefy-primary'
-                  : 'border-transparent text-purplefy-light-gray hover:text-purplefy-white'
-              }`}
-            >
-              {m.top_tracks_title()}
-            </button>
-            <button
-              onClick={() =>
-                navigate({
-                  search: (prev) => ({ ...prev, tab: 'albums' as const }),
-                })
-              }
-              className={`pb-4 px-1 border-b-2 font-medium transition-colors ${
-                activeTab === 'albums'
-                  ? 'border-purplefy-primary text-purplefy-primary'
-                  : 'border-transparent text-purplefy-light-gray hover:text-purplefy-white'
-              }`}
-            >
-              {m.albums_title()}
-            </button>
-          </nav>
+          <Tabs
+            items={[
+              { id: 'tracks', label: m.top_tracks_title() },
+              { id: 'albums', label: m.albums_title() },
+            ]}
+            activeId={activeTab}
+            onChange={(id) =>
+              navigate({ search: (prev) => ({ ...prev, tab: id as 'tracks' | 'albums' }) })
+            }
+          />
         </div>
 
         {activeTab === 'tracks' && (
@@ -243,12 +182,13 @@ function ArtistPage() {
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
               <h2 className="text-2xl font-bold text-purplefy-white">{m.albums_title()}</h2>
               <div className="w-full sm:w-auto">
-                <input
-                  type="text"
+                <Input
                   placeholder={m.filter_albums_placeholder()}
                   value={search.albumFilter || ''}
                   onChange={(e) => handleAlbumFilterChange(e.target.value)}
-                  className="input-field w-full sm:w-64"
+                  onClear={() => handleAlbumFilterChange('')}
+                  showSearch
+                  className="w-full sm:w-64"
                 />
               </div>
             </div>
@@ -277,87 +217,28 @@ function ArtistPage() {
 
       <MobileLayout title={artist.name} backTo="/home" showTabs={false}>
         <div className="px-4 py-4">
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-48 h-48 mb-4">
-              <Image
-                src={imageUrl}
-                alt={artist.name}
-                className="w-full h-full rounded-xl shadow-lg"
-              />
-            </div>
-            
-            <h1 className="text-2xl font-bold text-purplefy-white mb-2">
-              {artist.name}
-            </h1>
-            
-            <div className="flex items-center gap-4 mb-4">
-              <div className="flex items-center gap-1 text-purplefy-light-gray text-sm">
-                <Users className="w-4 h-4" />
-                <span>{(artist.followers.total / 1000000).toFixed(1)}M</span>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <div className="bg-purplefy-dark-gray rounded-full h-1.5 w-16">
-                  <div 
-                    className="bg-gradient-to-r from-purplefy-primary to-purplefy-secondary h-1.5 rounded-full"
-                    style={{ width: `${artist.popularity}%` }}
-                  />
-                </div>
-                <span className="text-xs text-purplefy-light-gray">
-                  {artist.popularity}%
-                </span>
-              </div>
-            </div>
+          <ArtistHeader
+            name={artist.name}
+            imageUrl={imageUrl}
+            followers={artist.followers.total}
+            popularity={artist.popularity}
+            genres={artist.genres}
+            externalUrl={artist.external_urls.spotify}
+            layout="mobile"
+          />
 
-            {artist.genres.length > 0 && (
-              <div className="flex flex-wrap gap-1 justify-center mb-4">
-                {artist.genres.slice(0, 3).map((genre) => (
-                  <span
-                    key={genre}
-                    className="px-2 py-1 bg-purplefy-medium-gray text-purplefy-light-gray text-xs rounded-full"
-                  >
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <OpenInSpotifyButton url={artist.external_urls.spotify} variant="primary" size="sm" />
-          </div>
-
-          <div className="mb-4" role="tablist" aria-label={m.artist_tablist_label()}>
-            <div className="flex items-center justify-between border-b border-purplefy-medium-gray/60">
-              <button
-                role="tab"
-                aria-selected={activeTab === 'tracks'}
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, tab: 'tracks' as const }) })
-                }
-                className={`relative flex-1 py-3 text-sm font-semibold text-center transition-colors ${
-                  activeTab === 'tracks' ? 'text-white' : 'text-purplefy-light-gray'
-                }`}
-              >
-                {m.tracks_title()}
-                {activeTab === 'tracks' && (
-                  <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
-                )}
-              </button>
-              <button
-                role="tab"
-                aria-selected={activeTab === 'albums'}
-                onClick={() =>
-                  navigate({ search: (prev) => ({ ...prev, tab: 'albums' as const }) })
-                }
-                className={`relative flex-1 py-3 text-sm font-semibold text-center transition-colors ${
-                  activeTab === 'albums' ? 'text-white' : 'text-purplefy-light-gray'
-                }`}
-              >
-                {m.albums_title()}
-                {activeTab === 'albums' && (
-                  <span className="pointer-events-none absolute left-0 bottom-0 h-0.5 w-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.5)]" />
-                )}
-              </button>
-            </div>
+          <div className="mb-4" aria-label={m.artist_tablist_label()}>
+            <Tabs
+              variant="block"
+              items={[
+                { id: 'tracks', label: m.tracks_title() },
+                { id: 'albums', label: m.albums_title() },
+              ]}
+              activeId={activeTab}
+              onChange={(id) =>
+                navigate({ search: (prev) => ({ ...prev, tab: id as 'tracks' | 'albums' }) })
+              }
+            />
           </div>
 
           {activeTab === 'tracks' && (
@@ -371,12 +252,13 @@ function ArtistPage() {
           {activeTab === 'albums' && (
             <div className="space-y-4">
               <div className="mb-4">
-                <input
-                  type="text"
+                <Input
                   placeholder={m.filter_albums_placeholder()}
                   value={search.albumFilter || ''}
                   onChange={(e) => handleAlbumFilterChange(e.target.value)}
-                  className="input-field w-full"
+                  onClear={() => handleAlbumFilterChange('')}
+                  showSearch
+                  className="w-full"
                 />
               </div>
 

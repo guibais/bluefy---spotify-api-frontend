@@ -1,3 +1,7 @@
 export { ArtistGrid } from './ArtistGrid'
 export { AlbumGrid } from './AlbumGrid'
 export { TrackList } from './TrackList'
+export { DesktopHeader } from './DesktopHeader/DesktopHeader'
+export { AlbumHeader } from './AlbumHeader/AlbumHeader'
+export { ArtistHeader } from './ArtistHeader/ArtistHeader'
+export { ProfileHeader } from './ProfileHeader/ProfileHeader'

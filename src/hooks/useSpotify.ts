@@ -200,7 +200,6 @@ export const useMyTopTracks = (limit: number = 20, timeRange: SpotifyTimeRange =
   })
 }
 
-// Playlists
 export const useMyPlaylists = (limit: number = 20) => {
   const { isAuthenticated } = useAuth()
   return useInfiniteQuery<SpotifySearchResponse<SpotifyPlaylist>>({
@@ -222,7 +221,6 @@ export const useMyPlaylists = (limit: number = 20) => {
   })
 }
 
-// Playlist detail
 export const usePlaylist = (playlistId: string) => {
   const { isAuthenticated } = useAuth()
   return useQuery<SpotifyPlaylist>({
@@ -245,7 +243,6 @@ export const usePlaylistTracks = (playlistId: string) => {
     queryKey: ['playlistTracks', playlistId],
     queryFn: async () => {
       const data = await spotifyService.getPlaylistTracks(playlistId)
-      // Some APIs return items with { track } shape; normalize to items: Track[] if needed
       if (Array.isArray((data as any).items) && (data as any).items.length && (data as any).items[0]?.track) {
         const tracks = (data as any).items.map((it: any) => it.track)
         return { ...data, items: tracks } as SpotifySearchResponse<SpotifyTrack>
@@ -263,9 +260,7 @@ export const usePlaylistTracks = (playlistId: string) => {
   })
 }
 
-// deprecated useFeaturedPlaylists removed
 
-// New Releases
 export const useNewReleases = (limit: number = 12, country: string = 'BR') => {
   const { isAuthenticated } = useAuth()
   return useQuery<{ albums: SpotifySearchResponse<SpotifyAlbum> }>({

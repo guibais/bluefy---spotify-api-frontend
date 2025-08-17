@@ -1,82 +1,14 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { m } from '@/paraglide/messages.js'
 import { PageTemplate } from '@/components'
+import { PlaylistCard, Section } from '@/components/molecules'
 import { useNewReleases, useMyPlaylists } from '@/hooks/useSpotify'
-import { Image } from '@/components/atoms/Image/Image'
-import { Button } from '@/components/atoms/Button/Button'
 
 export const Route = createFileRoute('/home')({
   component: HomePage,
 })
 
-type CardProps = {
-  id: string
-  name: string
-  image?: string
-  subtitle?: string
-  spotifyUrl?: string
-  to?: string
-}
-
-function PlaylistCard({ name, image, subtitle, spotifyUrl, to }: CardProps) {
-  const handleOpen = () => {
-    if (spotifyUrl) window.open(spotifyUrl, '_blank')
-  }
-  return (
-    <div className="group bg-purplefy-dark/40 border border-purplefy-medium-gray rounded-xl p-3 hover:border-purplefy-primary/50 transition-colors">
-      {to ? (
-        <Link to={to} className="block w-full text-left">
-          <div className="aspect-square w-full overflow-hidden rounded-lg mb-3 bg-purplefy-black">
-            {image ? (
-              <Image src={image} alt={name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-purplefy-light-gray">🎶</div>
-            )}
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-purplefy-white line-clamp-1">{name}</h3>
-            {subtitle && (
-              <p className="text-xs text-purplefy-light-gray line-clamp-1">{subtitle}</p>
-            )}
-          </div>
-        </Link>
-      ) : (
-        <button onClick={handleOpen} className="w-full text-left">
-          <div className="aspect-square w-full overflow-hidden rounded-lg mb-3 bg-purplefy-black">
-            {image ? (
-              <Image src={image} alt={name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-purplefy-light-gray">🎶</div>
-            )}
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-purplefy-white line-clamp-1">{name}</h3>
-            {subtitle && (
-              <p className="text-xs text-purplefy-light-gray line-clamp-1">{subtitle}</p>
-            )}
-          </div>
-        </button>
-      )}
-      {spotifyUrl && (
-        <div className="mt-3">
-          <Button onClick={handleOpen} variant="secondary" className="w-full">{m.open_in_spotify()}</Button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function Section({ title, children, action }: { title: string; children: React.ReactNode; action?: React.ReactNode }) {
-  return (
-    <section className="mb-10">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-purplefy-white">{title}</h2>
-        {action}
-      </div>
-      {children}
-    </section>
-  )
-}
+ 
 
 function HomePage() {
   const myPlaylists = useMyPlaylists(20)
@@ -130,6 +62,7 @@ function HomePage() {
                 image={a.images?.[0]?.url}
                 subtitle={a.artists?.[0]?.name || ''}
                 spotifyUrl={a.external_urls?.spotify}
+                to={`/album/${a.id}`}
               />
             ))}
           </div>
@@ -185,6 +118,7 @@ function HomePage() {
                 image={a.images?.[0]?.url}
                 subtitle={a.artists?.[0]?.name || ''}
                 spotifyUrl={a.external_urls?.spotify}
+                to={`/album/${a.id}`}
               />
             ))}
           </div>

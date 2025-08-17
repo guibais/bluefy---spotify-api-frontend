@@ -1,10 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { BackButton, ErrorState } from '@/components'
-import { ArrowLeft, Calendar, ExternalLink, Disc } from 'lucide-react'
 import { useAlbum, useAlbumTracks } from '../hooks/useSpotify'
 import { TrackList } from '../components/organisms/TrackList/TrackList'
-import { Button } from '../components/atoms/Button/Button'
-import { Image } from '../components/atoms/Image/Image'
+import { BackLink } from '@/components/molecules'
+import { AlbumHeader } from '@/components/organisms'
 import { MobileLayout } from '../components/organisms/MobileLayout/MobileLayout'
 import * as m from '@/paraglide/messages.js'
 
@@ -72,67 +71,18 @@ function AlbumPage() {
   return (
     <>
       <div className="hidden md:block container py-8">
-        <Link to="/home" className="inline-flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" />
-          {m.back_to_search()}
-        </Link>
+        <BackLink to="/home" label={m.back_to_search()} />
 
-        <div className="flex flex-col md:flex-row gap-8 mb-8">
-          <div className="w-full md:w-80">
-            <Image
-              src={imageUrl}
-              alt={album.name}
-              className="w-full aspect-square rounded-xl shadow-2xl"
-            />
-          </div>
-
-          <div className="flex-1">
-            <span className="inline-block px-3 py-1 bg-purplefy-medium-gray text-purplefy-light-gray text-sm rounded-full capitalize mb-4">
-              {album.album_type}
-            </span>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-purplefy-white mb-4">
-              {album.name}
-            </h1>
-
-            <p className="text-xl text-purplefy-light-gray mb-6">
-              {m.by()} {album.artists.map((artist, idx) => (
-                <span key={artist.id}>
-                  <Link
-                    to="/artist/$artistId"
-                    params={{ artistId: artist.id }}
-                    search={{ albumPage: 1 }}
-                    className="hover:text-purplefy-white underline-offset-2 hover:underline"
-                  >
-                    {artist.name}
-                  </Link>
-                  {idx < album.artists.length - 1 ? ', ' : ''}
-                </span>
-              ))}
-            </p>
-
-            <div className="flex items-center gap-6 mb-6 text-purplefy-light-gray">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span>{releaseYear}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Disc className="w-5 h-5" />
-                <span>{m.tracks_count({ count: album.total_tracks })}</span>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => window.open(album.external_urls.spotify, '_blank')}
-              variant="primary"
-              className="inline-flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              {m.open_in_spotify()}
-            </Button>
-          </div>
-        </div>
+        <AlbumHeader
+          name={album.name}
+          imageUrl={imageUrl}
+          albumType={album.album_type}
+          artists={album.artists.map(a => ({ id: a.id, name: a.name }))}
+          year={releaseYear}
+          tracksCount={album.total_tracks}
+          externalUrl={album.external_urls.spotify}
+          layout="desktop"
+        />
 
         <TrackList
           tracks={tracks}
@@ -143,61 +93,16 @@ function AlbumPage() {
 
       <MobileLayout title={album.name} backTo="/home" showTabs={false}>
         <div className="px-4 py-4">
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-64 h-64 mb-4">
-              <Image
-                src={imageUrl}
-                alt={album.name}
-                className="w-full h-full rounded-xl shadow-lg"
-              />
-            </div>
-            
-            <span className="inline-block px-2 py-1 bg-purplefy-medium-gray text-purplefy-light-gray text-xs rounded-full capitalize mb-2">
-              {album.album_type}
-            </span>
-            
-            <h1 className="text-xl font-bold text-purplefy-white mb-2">
-              {album.name}
-            </h1>
-            
-            <p className="text-purplefy-light-gray text-sm mb-4">
-              {m.by()} {album.artists.map((artist, idx) => (
-                <span key={artist.id}>
-                  <Link
-                    to="/artist/$artistId"
-                    params={{ artistId: artist.id }}
-                    search={{ albumPage: 1 }}
-                    className="hover:text-purplefy-white underline-offset-2 hover:underline"
-                  >
-                    {artist.name}
-                  </Link>
-                  {idx < album.artists.length - 1 ? ', ' : ''}
-                </span>
-              ))}
-            </p>
-
-            <div className="flex items-center gap-4 mb-4 text-purplefy-light-gray text-sm">
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span>{releaseYear}</span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <Disc className="w-4 h-4" />
-                <span>{m.tracks_count({ count: album.total_tracks })}</span>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => window.open(album.external_urls.spotify, '_blank')}
-              variant="primary"
-              size="sm"
-              className="inline-flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              {m.open_in_spotify()}
-            </Button>
-          </div>
+          <AlbumHeader
+            name={album.name}
+            imageUrl={imageUrl}
+            albumType={album.album_type}
+            artists={album.artists.map(a => ({ id: a.id, name: a.name }))}
+            year={releaseYear}
+            tracksCount={album.total_tracks}
+            externalUrl={album.external_urls.spotify}
+            layout="mobile"
+          />
 
          
           <TrackList
