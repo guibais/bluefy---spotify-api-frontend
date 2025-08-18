@@ -6,6 +6,16 @@
   <p>Modern Spotify client built with React + Vite.</p>
 </div>
 
+
+
+https://github.com/user-attachments/assets/456a4660-9621-4419-b94e-43f242e9230b
+
+
+
+https://github.com/user-attachments/assets/e5b83b40-8a78-4f2b-845c-08e2b5c1e6bd
+
+
+
 ## Sumário
 
 - [Sobre](#sobre)
