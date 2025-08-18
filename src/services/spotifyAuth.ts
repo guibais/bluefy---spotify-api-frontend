@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/authStore'
 
 const CLIENT_ID = '450f718a72f3440f86d87571eb65367b'
-const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI as string
+const REDIRECT_URI = typeof window !== 'undefined' ? window.location.origin + '/callback' : ''
 const SCOPE = 'user-read-private user-read-email user-top-read user-read-recently-played'
 
 const generateRandomString = (length: number): string => {
