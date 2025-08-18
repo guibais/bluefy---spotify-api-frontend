@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { MiniPlaylistCard } from './MiniPlaylistCard'
+import { narrow360 } from '@/stories/decorators'
 
 const meta = {
   title: 'Molecules/MiniPlaylistCard',
@@ -11,6 +12,7 @@ const meta = {
     tracksCount: 24,
     externalUrl: 'https://open.spotify.com/playlist/37i9dQZF1E4sYVZrM4q6YG',
   },
+  decorators: [narrow360],
 } satisfies Meta<typeof MiniPlaylistCard>
 
 export default meta

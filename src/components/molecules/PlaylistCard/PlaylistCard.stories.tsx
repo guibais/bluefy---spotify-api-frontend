@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { PlaylistCard } from './PlaylistCard'
+import { narrow360 } from '@/stories/decorators'
 
 const meta = {
   title: 'Molecules/PlaylistCard',
@@ -10,6 +11,7 @@ const meta = {
     image: 'https://picsum.photos/seed/playlist/300/300',
     subtitle: 'Músicas para focar',
   },
+  decorators: [narrow360],
 } satisfies Meta<typeof PlaylistCard>
 
 export default meta
