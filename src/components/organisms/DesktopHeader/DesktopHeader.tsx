@@ -10,7 +10,8 @@ type Props = {
 
 export function DesktopHeader({ isAuthenticated, onLogout }: Props) {
   return (
-    <header className="hidden md:block sticky top-0 z-50 bg-purplefy-black/95 backdrop-blur-custom border-b border-purplefy-medium-gray">
+  <>
+    <header className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-purplefy-black/95 backdrop-blur-lg border-b border-purplefy-medium-gray">
       <div className="container">
         <div className="flex items-center justify-between h-16">
           <Link to="/home" className="flex items-center gap-2 text-purplefy-accent hover:text-purplefy-secondary transition-colors">
@@ -37,5 +38,7 @@ export function DesktopHeader({ isAuthenticated, onLogout }: Props) {
         </div>
       </div>
     </header>
+    <div className="h-16"></div>
+  </>
   )
 }

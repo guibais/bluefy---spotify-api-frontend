@@ -10,7 +10,7 @@ export function NavItem({ to, label }: NavItemProps) {
     <Link 
       to={to}
       className="text-spotify-light-gray hover:text-spotify-white transition-colors"
-      activeProps={{ className: 'text-blue-500' }}
+      activeProps={{ className: 'text-purple-300' }}
     >
       {label}
     </Link>
