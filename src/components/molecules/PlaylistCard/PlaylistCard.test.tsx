@@ -24,4 +24,15 @@ describe('PlaylistCard', () => {
     fireEvent.click(buttons[1])
     expect(window.open).toHaveBeenCalled()
   })
+
+  it('renders placeholder icon when no image in link variant', () => {
+    render(<PlaylistCard id="1" name="N" to="/t" />)
+    expect(screen.getByText('🎶')).toBeTruthy()
+  })
+
+  it('renders image and subtitle in button variant when provided', () => {
+    render(<PlaylistCard id="1" name="N" image="/i.png" subtitle="S" spotifyUrl="https://s" />)
+    expect(screen.getByAltText('N')).toBeTruthy()
+    expect(screen.getByText('S')).toBeTruthy()
+  })
 })

@@ -18,4 +18,25 @@ describe('SpotifyLogin', () => {
 
     expect(spotifyAuth.redirectToSpotifyAuth).toHaveBeenCalledWith('xyz')
   })
+
+  it('handles redirect error and logs it without calling onLogin', async () => {
+    const onLogin = vi.fn()
+    const { spotifyAuth } = await import('@/services/spotifyAuth')
+    ;(spotifyAuth.redirectToSpotifyAuth as any).mockRejectedValueOnce(
+      new Error('fail')
+    )
+
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    render(<SpotifyLogin onLogin={onLogin} state="bad" />)
+    const button = screen.getByRole('button')
+    fireEvent.click(button)
+
+    await vi.waitFor(() => {
+      expect(errorSpy).toHaveBeenCalled()
+    })
+    expect(onLogin).not.toHaveBeenCalled()
+
+    errorSpy.mockRestore()
+  })
 })

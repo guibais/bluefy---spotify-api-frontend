@@ -31,10 +31,10 @@ export default defineConfig({
         'src/**/index.{ts,tsx}'
       ],
       thresholds: {
-        lines: 60,
+        lines: 80,
         functions: 80,
         branches: 80,
-        statements: 60
+        statements: 80
       }
     }
   }
