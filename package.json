@@ -12,7 +12,9 @@
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check",
-    "machine-translate": "inlang machine translate --project project.inlang"
+    "machine-translate": "inlang machine translate --project project.inlang",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -38,9 +40,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@chromatic-com/storybook": "^4.1.0",
     "@inlang/cli": "^3.0.0",
     "@inlang/paraglide-js": "2.2.0",
     "@inlang/paraglide-vite": "^1.4.0",
+    "@storybook/addon-a11y": "^9.1.2",
+    "@storybook/addon-docs": "^9.1.2",
+    "@storybook/addon-vitest": "^9.1.2",
+    "@storybook/react-vite": "^9.1.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^24.3.0",
@@ -50,11 +57,14 @@
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "3.2.4",
     "jsdom": "^26.0.0",
+    "storybook": "^9.1.2",
     "typescript": "^5.7.2",
     "vite": "^6.3.5",
     "vite-plugin-mkcert": "^1.17.8",
     "vitest": "^3.0.5",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "@vitest/browser": "3.2.4",
+    "playwright": "^1.54.2"
   },
   "resolutions": {
     "vite": "6.3.5"
