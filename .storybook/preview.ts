@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import '../src/styles.css'
+import { withRouter } from './decorators'
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +15,7 @@ const preview: Preview = {
       test: 'todo'
     }
   },
+  decorators: [withRouter]
 };
 
 export default preview;
