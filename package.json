@@ -13,6 +13,7 @@
     "lint": "biome lint",
     "check": "biome check",
     "machine-translate": "inlang machine translate --project project.inlang",
+    "i18n:compile": "paraglide-js compile --project project.inlang --outdir src/paraglide",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

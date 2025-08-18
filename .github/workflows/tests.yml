@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Compile i18n (Paraglide)
+        run: yarn i18n:compile
+
       - name: Run tests with coverage
         env:
           CI: true
