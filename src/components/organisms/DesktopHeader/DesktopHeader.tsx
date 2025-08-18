@@ -10,10 +10,10 @@ type Props = {
 
 export function DesktopHeader({ isAuthenticated, onLogout }: Props) {
   return (
-    <header className="hidden md:block sticky top-0 z-50 bg-spotify-black/95 backdrop-blur-custom border-b border-spotify-medium-gray">
+    <header className="hidden md:block sticky top-0 z-50 bg-purplefy-black/95 backdrop-blur-custom border-b border-purplefy-medium-gray">
       <div className="container">
         <div className="flex items-center justify-between h-16">
-          <Link to="/home" className="flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors">
+          <Link to="/home" className="flex items-center gap-2 text-purplefy-accent hover:text-purplefy-secondary transition-colors">
             <Music className="w-8 h-8" />
             <span className="text-xl font-bold">purplefy</span>
           </Link>
@@ -26,7 +26,7 @@ export function DesktopHeader({ isAuthenticated, onLogout }: Props) {
               <button
                 type="button"
                 onClick={onLogout}
-                className="flex items-center gap-2 text-spotify-light-gray hover:text-spotify-white transition-colors"
+                className="flex items-center gap-2 text-purplefy-light-gray hover:text-purplefy-white transition-colors"
                 aria-label={m.nav_logout()}
               >
                 <LogOut className="w-4 h-4" />
