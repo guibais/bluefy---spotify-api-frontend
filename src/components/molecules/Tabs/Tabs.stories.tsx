@@ -11,6 +11,7 @@ const meta = {
       { id: 'c', label: 'C' },
     ],
     activeId: 'a',
+    onChange: () => {},
   },
   argTypes: {
     onChange: { action: 'change' },

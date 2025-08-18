@@ -5,6 +5,7 @@ const meta = {
   title: 'Molecules/PlaylistCard',
   component: PlaylistCard,
   args: {
+    id: 'playlist_1',
     name: 'Focus Beats',
     image: 'https://picsum.photos/seed/playlist/300/300',
     subtitle: 'Músicas para focar',

@@ -7,6 +7,7 @@ const meta = {
   args: {
     placeholder: 'Buscar artistas',
     initialValue: '',
+    onSearch: () => {},
   },
   argTypes: {
     onSearch: { action: 'search' },

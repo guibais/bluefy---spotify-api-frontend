@@ -14,12 +14,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: (args) => (
-    <Section {...args}>
+  args: {
+    title: 'Seção',
+    children: (
       <div className="grid grid-cols-2 gap-4">
         <div className="h-16 bg-purplefy-medium-gray rounded" />
         <div className="h-16 bg-purplefy-medium-gray rounded" />
       </div>
-    </Section>
-  ),
+    ),
+  },
 }
