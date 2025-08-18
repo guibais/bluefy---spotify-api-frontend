@@ -18,7 +18,6 @@ describe('Loading', () => {
     render(<Loading size="lg" className="extra" />)
     const svg = document.querySelector('svg')!
     expect(svg.getAttribute('class') || '').toContain('w-12 h-12')
-    // wrapper should include provided className
     const wrapper = svg.parentElement!
     expect(wrapper.className).toContain('extra')
   })

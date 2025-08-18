@@ -15,6 +15,12 @@ describe('TrackList', () => {
     expect(container.querySelectorAll('.skeleton').length).toBeGreaterThan(0)
   })
 
+  it('renders title and skeleton rows when loading with title', () => {
+    const { container } = render(<TrackList tracks={[]} loading title="Carregando" />)
+    expect(screen.getByRole('heading', { level: 3, name: 'Carregando' })).toBeTruthy()
+    expect(container.querySelectorAll('.skeleton').length).toBeGreaterThan(0)
+  })
+
   it('shows empty state', () => {
     render(<TrackList tracks={[]} />)
     expect(screen.getByRole('heading', { level: 3, name: 'Nenhuma música encontrada' })).toBeTruthy()

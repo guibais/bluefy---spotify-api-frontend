@@ -25,13 +25,11 @@ describe('PageTemplate', () => {
       />
     )
 
-    // Desktop container
     expect(screen.getByRole('heading', { level: 1, name: 'Título' })).toBeTruthy()
     expect(screen.getByText('Descrição')).toBeTruthy()
     expect(screen.getByText('TD')).toBeTruthy()
     expect(screen.getByText('Desktop')).toBeTruthy()
 
-    // Mobile section (mocked)
     const mobile = screen.getByRole('region', { name: 'mobile' })
     expect(mobile).toBeTruthy()
     expect(screen.getByRole('heading', { level: 2, name: 'Título' })).toBeTruthy()

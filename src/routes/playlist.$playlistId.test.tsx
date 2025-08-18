@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
-// Mock do router para expor Route.component e params
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: (_path: string) => (opts: any) => ({
     ...opts,
@@ -9,13 +8,11 @@ vi.mock('@tanstack/react-router', () => ({
   }),
 }))
 
-// Mocks dos hooks do Spotify
 vi.mock('@/hooks/useSpotify', () => ({
   usePlaylist: vi.fn(),
   usePlaylistTracks: vi.fn(),
 }))
 
-// Stubs dos componentes usados para evitar dependências visuais e paraglide
 vi.mock('@/components', () => ({
   DetailTemplate: ({ title, header, children, backTo }: any) => (
     <div>

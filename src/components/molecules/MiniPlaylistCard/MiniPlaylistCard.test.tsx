@@ -16,7 +16,6 @@ vi.mock('@/components/atoms/Image/Image', () => ({
 }))
 
 vi.mock('@/components/atoms', () => ({
-  // Render as a button to avoid nested <a> inside mocked Link
   OpenInSpotifyButton: ({ url, ariaLabel }: any) => (
     <button type="button" aria-label={ariaLabel} data-url={url}>
       open

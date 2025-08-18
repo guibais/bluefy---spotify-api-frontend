@@ -10,7 +10,6 @@ describe('Input', () => {
 
   it('shows search icon when showSearch', () => {
     render(<Input showSearch aria-label="search" />)
-    // lucide icon has no role; ensure the input has left padding class applied
     const input = screen.getByRole('textbox')
     expect(input.className).toContain('pl-10')
   })

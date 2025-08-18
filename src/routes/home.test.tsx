@@ -15,7 +15,6 @@ vi.mock('@/hooks/useSpotify', () => ({
 import * as hooks from '@/hooks/useSpotify'
 import { Route } from './home'
 
-// Mock dos componentes para evitar dependências e foco no comportamento da rota
 vi.mock('@/components', () => ({
   PageTemplate: ({ title, description, desktop, mobile }: any) => (
     <div>
@@ -42,7 +41,6 @@ vi.mock('@/components/molecules', () => ({
   ),
 }))
 
-// types local simples para evitar depender de types globais
 type Image = { url?: string }
 
 describe('/home route', () => {
@@ -51,7 +49,7 @@ describe('/home route', () => {
     vi.clearAllMocks()
   })
 
-  it('renderiza título e descrição em português', async () => {
+  it('renders title and description in Portuguese', async () => {
     ;(hooks.useMyPlaylists as any).mockReturnValue({ isLoading: true, data: undefined })
     ;(hooks.useNewReleases as any).mockReturnValue({ isLoading: true, data: undefined })
 
@@ -65,7 +63,7 @@ describe('/home route', () => {
     expect(screen.getByText('Sua experiência')).toBeInTheDocument()
   })
 
-  it('renderiza listas quando carregado (playlists e lançamentos)', async () => {
+  it('renders lists when loaded (playlists and new releases)', async () => {
     const playlistItems = Array.from({ length: 3 }).map((_, i) => ({
       id: `pl-${i}`,
       name: `Playlist ${i}`,
@@ -95,11 +93,9 @@ describe('/home route', () => {
     const Cmp = (Route as any).component
     render(<Cmp />)
 
-    // Títulos das seções em português
-    expect(await screen.findAllByText('Suas Playlists')).toHaveLength(2) // desktop e mobile
+    expect(await screen.findAllByText('Suas Playlists')).toHaveLength(2)
     expect(await screen.findAllByText('Novos Lançamentos')).toHaveLength(2)
 
-    // Alguns cards de playlist e álbum (aparecem em desktop e mobile)
     expect(screen.getAllByText('Playlist 0').length).toBeGreaterThanOrEqual(2)
     expect(screen.getAllByText('Owner 0').length).toBeGreaterThanOrEqual(2)
 

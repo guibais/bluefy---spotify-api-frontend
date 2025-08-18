@@ -10,7 +10,6 @@ describe('BackButton', () => {
     const { container } = render(<BackButton fallbackTo="/home" />)
     const btn = container.querySelector('button')!
     fireEvent.click(btn)
-    // no throw is enough; navigate mocked
     Object.defineProperty(window, 'history', { value: { length: original, back: vi.fn() } })
   })
 

@@ -48,4 +48,30 @@ describe('AlbumHeader', () => {
     expect(screen.queryByText('2020')).toBeNull()
     expect(screen.queryByRole('button', { name: 'open-spotify' })).toBeNull()
   })
+
+  it('renders album type badge in mobile layout when provided', () => {
+    render(
+      <AlbumHeader
+        name={base.name}
+        artists={base.artists}
+        albumType={base.albumType}
+        layout="mobile"
+      />,
+    )
+    expect(screen.getByText(base.albumType)).toBeTruthy()
+  })
+
+  it('renders year and tracks in mobile layout when provided', () => {
+    render(
+      <AlbumHeader
+        name={base.name}
+        artists={base.artists}
+        year={base.year}
+        tracksCount={base.tracksCount}
+        layout="mobile"
+      />,
+    )
+    expect(screen.getByText('2020')).toBeTruthy()
+    expect(screen.getByText('12 faixas')).toBeTruthy()
+  })
 })
