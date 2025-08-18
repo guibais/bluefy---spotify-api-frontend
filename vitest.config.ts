@@ -12,6 +12,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    setupFiles: ['src/test-utils/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     exclude: [
       'node_modules/**',
@@ -23,12 +24,12 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['src/components/atoms/**/*.{ts,tsx}', 'src/components/molecules/**/*.{ts,tsx}'],
+      include: ['src/components/atoms/**/*.{ts,tsx}', 'src/components/molecules/**/*.{ts,tsx}','src/components/organisms/**/*.{ts,tsx}','src/components/templates/**/*.{ts,tsx}', 'src/routes/**/*.{ts,tsx}'],
       exclude: [
         '**/*.test.*',
         '**/*.stories.*',
         'src/**/__mocks__/**',
-        'src/**/index.{ts,tsx}'
+        'src/components/**/index.{ts,tsx}'
       ],
       thresholds: {
         lines: 80,
