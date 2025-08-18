@@ -63,7 +63,10 @@ describe('__root route guards', () => {
   })
 
   afterEach(() => {
-    window.location = originalLocation
+    Object.defineProperty(window, 'location', {
+      value: originalLocation,
+      configurable: true,
+    })
   })
 
   it('redirects unauthenticated users to /login preserving from with locale in path', async () => {
