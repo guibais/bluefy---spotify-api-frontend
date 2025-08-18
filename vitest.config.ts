@@ -24,7 +24,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/components/atoms/**/*.{ts,tsx}', 'src/components/molecules/**/*.{ts,tsx}'],
-      exclude: ['**/*.test.*', 'src/**/__mocks__/**', 'src/**/index.{ts,tsx}'],
+      exclude: [
+        '**/*.test.*',
+        '**/*.stories.*',
+        'src/**/__mocks__/**',
+        'src/**/index.{ts,tsx}'
+      ],
       thresholds: {
         lines: 60,
         functions: 80,
